@@ -7,7 +7,7 @@ ReceivePort::ReceivePort(QextSerialPort *port)
 }
 void ReceivePort::run()
 {
-    int numbytes = 0 ;
+    int numbytes =0 ;
     char data[1024] ;
     QByteArray receivedData ;
     while(1)

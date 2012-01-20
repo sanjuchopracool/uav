@@ -1,6 +1,7 @@
 #ifndef RECEIVEPORT_H
 #define RECEIVEPORT_H
-#include "files/qextserialport.h"
+//#include "files/qextserialport.h"
+#include<qextserialport.h>
 #include <QMutex>
 #include<QDebug>
 #include<QThread>
