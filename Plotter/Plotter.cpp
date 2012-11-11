@@ -8,7 +8,10 @@ Plotter::Plotter(QWidget *parent) :
    // backgroundColor = QColor(100,93,90);
     textColor = Qt::blue;
     gridColor = QColor(100,93,90);
+    antiAliasing = false;
     showGrid  = false;
+    xAxisText = "X-Axis";
+    yAxisText = "y-Axis";
     setBackgroundRole(QPalette::Dark);
     setAutoFillBackground(true);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -245,7 +248,6 @@ void Plotter::drawGridAndText(QPainter& painter)
         painter.drawText(0,0 , 100 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label));
         painter.restore();
 
-
         if(showGrid)
         {
             float miniStep = ((rect.width() -1.0)/(setting.numXTicks*10.0));
@@ -258,6 +260,7 @@ void Plotter::drawGridAndText(QPainter& painter)
                 painter.drawLine(x + offset , rect.top() , x + offset , rect.bottom());
             }
             painter.restore();
+
         }
     }
 
@@ -283,6 +286,16 @@ void Plotter::drawGridAndText(QPainter& painter)
             painter.restore();
         }
     }
+    painter.save();
+    painter.translate(rect.left() + rect.width()/2 , rect.bottom() + 30);
+    painter.drawText(-100,0,200,20,Qt::AlignHCenter,xAxisText);
+    painter.restore();
+
+    painter.save();
+    painter.translate(rect.left() - 40,rect.bottom() -rect.height()/2);
+    painter.rotate(-90);
+    painter.drawText(-100,0,200,20,Qt::AlignHCenter,yAxisText);
+    painter.restore();
 
     painter.drawRect(rect.adjusted( 0 , 0 , -1 , -1));
 }
@@ -320,7 +333,8 @@ void Plotter::drawCurves(QPainter& painter)
             polyline[j] = QPointF(x,y);
           //  qDebug() << QPointF(x,y);
         }
-        painter.setRenderHint(QPainter::Antialiasing);
+        if(antiAliasing)
+            painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(penMap.value(id));
         painter.drawPolyline(polyline);
     }

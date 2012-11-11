@@ -56,6 +56,9 @@ private:
     QColor textColor;
     QColor gridColor;
     bool showGrid;
+    bool antiAliasing;
+    QString xAxisText;
+    QString yAxisText;
 };
 class PlotSettings
 {
