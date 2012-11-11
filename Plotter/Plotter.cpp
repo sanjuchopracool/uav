@@ -10,8 +10,8 @@ Plotter::Plotter(QWidget *parent) :
     gridColor = QColor(100,93,90);
     antiAliasing = false;
     showGrid  = false;
-    xAxisText = "X-Axis";
-    yAxisText = "y-Axis";
+    xAxisText = "X-Axis (mm)";
+    yAxisText = "Y-Axis (val)";
     setBackgroundRole(QPalette::Dark);
     setAutoFillBackground(true);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -286,13 +286,17 @@ void Plotter::drawGridAndText(QPainter& painter)
             painter.restore();
         }
     }
+    QFont textFont;
+    textFont.setBold(true);
+    textFont.setPixelSize(20);
+    painter.setFont(textFont);
     painter.save();
     painter.translate(rect.left() + rect.width()/2 , rect.bottom() + 30);
     painter.drawText(-100,0,200,20,Qt::AlignHCenter,xAxisText);
     painter.restore();
 
     painter.save();
-    painter.translate(rect.left() - 40,rect.bottom() -rect.height()/2);
+    painter.translate(rect.left() - 50,rect.bottom() -rect.height()/2);
     painter.rotate(-90);
     painter.drawText(-100,0,200,20,Qt::AlignHCenter,yAxisText);
     painter.restore();
