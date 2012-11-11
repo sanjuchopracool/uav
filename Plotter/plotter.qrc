@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>images/zoomin.png</file>
         <file>images/zoomout.png</file>
+        <file>images/showgrid.png</file>
     </qresource>
 </RCC>

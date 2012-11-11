@@ -15,7 +15,7 @@ class Plotter : public QWidget
 public:
     Plotter(QWidget *parent = 0);
     void setPlotSettings(const PlotSettings & settings);
-    void setCurveDate(int id , QVector<QPointF>& data, QPen& pen);
+    void setCurveData(int id , QVector<QPointF>& data, QPen pen);
     void clearCurve(int id);
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
@@ -32,6 +32,7 @@ protected:
 public slots:
     void zoomIn();
     void zoomOut();
+    void showGridSlot();
 
 private:
     void updateRubberBandRegion();
@@ -42,6 +43,7 @@ private:
     enum {Margin = 50};
     QToolButton* zoomInButton;
     QToolButton* zoomOutButton;
+    QToolButton* showGridButton;
 
     QPixmap pixmap;
     bool rubberBandShown;
@@ -52,6 +54,8 @@ private:
     QColor backgroundColor;
     QMap<int,QPen> penMap;
     QColor textColor;
+    QColor gridColor;
+    bool showGrid;
 };
 class PlotSettings
 {
