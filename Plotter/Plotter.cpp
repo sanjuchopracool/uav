@@ -9,7 +9,7 @@ Plotter::Plotter(QWidget *parent) :
     textColor = Qt::blue;
     gridColor = QColor(100,93,90);
     antiAliasing = false;
-    showGrid  = false;
+    showGrid  = true;
     xAxisText = "X-Axis (mm)";
     yAxisText = "Y-Axis (val)";
     setBackgroundRole(QPalette::Dark);
