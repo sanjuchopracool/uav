@@ -40,7 +40,7 @@ private:
     void drawGridAndText(QPainter &painter);
     void drawCurves(QPainter &painter);
 
-    enum {Margin = 50};
+    enum {Margin = 80};
     QToolButton* zoomInButton;
     QToolButton* zoomOutButton;
     QToolButton* showGridButton;

@@ -200,6 +200,33 @@ void Plotter::mouseReleaseEvent(QMouseEvent *event)
 
 void Plotter::keyPressEvent(QKeyEvent *event)
 {
+    switch (event->key()) {
+    case Qt::Key_Plus:
+    zoomIn();
+    break;
+    case Qt::Key_Minus:
+    zoomOut();
+    break;
+    case Qt::Key_Left:
+    zoomStack[curZoom].scroll(-1, 0);
+    refreshPixmap();
+    break;
+    case Qt::Key_Right:
+    zoomStack[curZoom].scroll(+1, 0);
+    refreshPixmap();
+    break;
+    case Qt::Key_Down:
+    zoomStack[curZoom].scroll(0, -1);
+    refreshPixmap();
+    break;
+    case Qt::Key_Up:
+    zoomStack[curZoom].scroll(0, +1);
+    refreshPixmap();
+    break;
+    default:
+    QWidget::keyPressEvent(event);
+    }
+
 }
 
 void Plotter::wheelEvent(QWheelEvent *event)
@@ -245,7 +272,7 @@ void Plotter::drawGridAndText(QPainter& painter)
         painter.save();
         painter.translate( x - 10 ,rect.bottom() + 107);
         painter.rotate(-90);
-        painter.drawText(0,0 , 100 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label));
+        painter.drawText(0,0 , 100 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label,'f',2));
         painter.restore();
 
         if(showGrid)
@@ -271,7 +298,7 @@ void Plotter::drawGridAndText(QPainter& painter)
         double label = setting.minY + ((i*setting.spanY()) /setting.numYTicks);
         painter.drawText(rect.left() - Margin ,y - 10 ,
 
-                         Margin-5 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label));
+                         Margin-5 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label,'f',2));
         if(showGrid)
         {
             float miniStep = ((rect.height() -1.0)/(setting.numYTicks*10.0));
@@ -291,12 +318,12 @@ void Plotter::drawGridAndText(QPainter& painter)
     textFont.setPixelSize(20);
     painter.setFont(textFont);
     painter.save();
-    painter.translate(rect.left() + rect.width()/2 , rect.bottom() + 30);
+    painter.translate(rect.left() + rect.width()/2 , rect.bottom() + 50);
     painter.drawText(-100,0,200,20,Qt::AlignHCenter,xAxisText);
     painter.restore();
 
     painter.save();
-    painter.translate(rect.left() - 50,rect.bottom() -rect.height()/2);
+    painter.translate(rect.left() - 75,rect.bottom() -rect.height()/2);
     painter.rotate(-90);
     painter.drawText(-100,0,200,20,Qt::AlignHCenter,yAxisText);
     painter.restore();
@@ -325,18 +352,19 @@ void Plotter::drawCurves(QPainter& painter)
         QVector <QPointF> data = i.value();
         int count = data.count();
        // qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
-        QPolygonF polyline(count);
+        QPolygonF polyline;
         for(int j = 0; j < count ;j++)
-        {
-            double dx = data[j].x() - setting.minX;
-            double dy = data[j].y() - setting.minY;
+            if((data[j].x()>= setting.minX -1) && (data[j].x() <= setting.maxX + 1))
+            {
+                double dx = data[j].x() - setting.minX;
+                double dy = data[j].y() - setting.minY;
 
-            double x = rect.left() + (dx * (rect.width()-1))/setting.spanX();
-            double y = rect.bottom() - (dy*(rect.height()-1))/setting.spanY();
+                double x = rect.left() + (dx * (rect.width()-1))/setting.spanX();
+                double y = rect.bottom() - (dy*(rect.height()-1))/setting.spanY();
 
-            polyline[j] = QPointF(x,y);
-          //  qDebug() << QPointF(x,y);
-        }
+                polyline <<  QPointF(x,y);
+                //  qDebug() << QPointF(x,y);
+            }
         if(antiAliasing)
             painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(penMap.value(id));
@@ -354,11 +382,11 @@ PlotSettings::PlotSettings()
 
 void PlotSettings::scroll(int dx, int dy)
 {
-   double stepX = spanX();
+   double stepX = spanX() / numXTicks;
    minX += stepX * dx;
    maxX += stepX * dx;
 
-   double stepY = spanY();
+   double stepY = spanY()/ numYTicks;
    minY += stepY * dy;
    maxY += stepY * dy;
 
