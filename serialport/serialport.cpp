@@ -7,6 +7,7 @@ void printError(const SerialPort* port)
 SerialPort::SerialPort(QObject *parent) :
     QObject(parent)
 {
+    ttyFd = -1 ;   //by default fd should be -1
     deviceName = "/dev/ttyUSB0" ;               //default is ttyUSB0 my laptop does not have ttyso
     openFlags = O_NONBLOCK | O_NOCTTY ;         //use non blocking (used for terminal , fifi ,sockets),and
                                                 //no control terminal for process
@@ -15,6 +16,11 @@ SerialPort::SerialPort(QObject *parent) :
      *make sure config struct is filled with zero
      */
     memset(&config,0,sizeof(config));
+    config.c_cc[VMIN]=0;
+    config.c_cc[VTIME]=0;
+    config.c_iflag=0;
+    config.c_oflag=0;
+    config.c_lflag=0;
 
     /*
      *set the control flags for config
@@ -222,10 +228,25 @@ void SerialPort::setParity(ParityType parity)
 
 void SerialPort::applySetting()
 {
-    tcsetattr(ttyFd, TCSANOW, &config);
+//    qDebug() <<ttyFd;
+//    qDebug() << config.c_cflag;
+    if(ttyFd != -1)
+        tcsetattr(ttyFd, TCSANOW, &config);
+    else
+        qDebug() <<"Error";
 }
 
 void SerialPort::clearSetting()
 {
     memset(&config,0,sizeof(config));
+}
+
+int SerialPort::writeToPort(char *buff, int num)
+{
+    return write(ttyFd,buff,num);
+}
+
+int SerialPort::readFromPort(char *buff, int num)
+{
+    return read(ttyFd,buff,num);
 }

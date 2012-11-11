@@ -91,6 +91,8 @@ public:
     void setParity(ParityType parity);
     void applySetting();
     void clearSetting();
+    int writeToPort(char* buff,int num);
+    int readFromPort(char* buff,int num);
 signals:
     
 public slots:
