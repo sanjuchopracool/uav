@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include <QObject>
-
+#include <QThread>
+#include <QMutex>
+#include <QQueue>
 enum BaudRateType
 {
     BAUD0,
@@ -65,12 +67,11 @@ enum ParityType
     ODD,
     EVEN
 };
-
-class SerialPort : public QObject
+class SerialPort : public QThread
 {
     Q_OBJECT
 public:
-    SerialPort(QObject *parent = 0);
+    SerialPort();
     void setDeviceName(std::string name)
     {
         deviceName = name;
@@ -92,15 +93,22 @@ public:
     void applySetting();
     void clearSetting();
     int writeToPort(char* buff,int num);
-    int readFromPort(char* buff,int num);
+
+    void run();
 signals:
-    
+    void signalReceied(QByteArray);
 public slots:
+    void slotReceived(QByteArray);
+
+public:
+    QQueue<QByteArray> writeBuffer;
+    QQueue<QByteArray> readBuffer;
 private:
     std::string deviceName;
     int ttyFd;
     int openFlags;
     struct termios config;
+    QMutex mutex;
     
 };
 

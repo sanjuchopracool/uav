@@ -1,11 +1,10 @@
 #include "serialport.h"
-
+#include <iostream>
 void printError(const SerialPort* port)
 {
     qDebug() << port->getDeviceName()  << " Error: " <<QString(strerror(errno));
 }
-SerialPort::SerialPort(QObject *parent) :
-    QObject(parent)
+SerialPort::SerialPort()
 {
     ttyFd = -1 ;   //by default fd should be -1
     deviceName = "/dev/ttyUSB0" ;               //default is ttyUSB0 my laptop does not have ttyso
@@ -29,8 +28,6 @@ SerialPort::SerialPort(QObject *parent) :
      *baud rate 9600
      */
     config.c_cflag = CREAD | CLOCAL | CS8 | B9600;
-
-
 }
 
 bool SerialPort::openDevice()
@@ -45,6 +42,7 @@ bool SerialPort::openDevice()
      *set tty flag such that idoes not wait when we use read function
      */
     fcntl(ttyFd,F_SETFL,O_NONBLOCK);
+    applySetting();
     qDebug() << "Successfully opened the device " << this->getDeviceName();
     return true;
 }
@@ -246,7 +244,33 @@ int SerialPort::writeToPort(char *buff, int num)
     return write(ttyFd,buff,num);
 }
 
-int SerialPort::readFromPort(char *buff, int num)
+void SerialPort::run()
 {
-    return read(ttyFd,buff,num);
+    //for checking connect the slots
+    connect(this,SIGNAL(signalReceied(QByteArray)),this,SLOT(slotReceived(QByteArray)));
+    qDebug() << "Started the thread";
+    char buff[4096] ;
+    QByteArray array;
+    int num = 0;
+    forever
+    {
+        mutex.lock();
+        num = read(ttyFd,buff,4096);
+        mutex.unlock();
+        if((num != -1) && num)
+        {
+            array = QByteArray(buff,num);
+            write(STDOUT_FILENO,buff,num);
+           // readBuffer.enqueue(array);
+           // qDebug()<<readBuffer.count();
+        }
+    }
+
+}
+
+
+void SerialPort::slotReceived(QByteArray array)
+{
+    qDebug() << "Running";
+
 }
