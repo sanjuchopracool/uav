@@ -6,6 +6,8 @@ void printError(const SerialPort* port)
 }
 SerialPort::SerialPort()
 {
+    debug = false;
+
     ttyFd = -1 ;   //by default fd should be -1
     deviceName = "/dev/ttyUSB0" ;               //default is ttyUSB0 my laptop does not have ttyso
     openFlags = O_NONBLOCK | O_NOCTTY ;         //use non blocking (used for terminal , fifi ,sockets),and
@@ -14,6 +16,8 @@ SerialPort::SerialPort()
     /*
      *make sure config struct is filled with zero
      */
+
+
     memset(&config,0,sizeof(config));
     config.c_cc[VMIN]=0;
     config.c_cc[VTIME]=0;
@@ -27,6 +31,8 @@ SerialPort::SerialPort()
      *default size 8
      *baud rate 9600
      */
+
+
     config.c_cflag = CREAD | CLOCAL | CS8 | B9600;
 }
 
@@ -38,9 +44,14 @@ bool SerialPort::openDevice()
         printError(this);
         return false ;
     }
+
+
     /*
      *set tty flag such that idoes not wait when we use read function
      */
+
+
+
     fcntl(ttyFd,F_SETFL,O_NONBLOCK);
     applySetting();
     qDebug() << "Successfully opened the device " << this->getDeviceName();
@@ -246,23 +257,19 @@ int SerialPort::writeToPort(char *buff, int num)
 
 void SerialPort::run()
 {
-    //for checking connect the slots
-    connect(this,SIGNAL(signalReceied(QByteArray)),this,SLOT(slotReceived(QByteArray)));
-    qDebug() << "Started the thread";
-    char buff[4096] ;
+    char buffer[4096] ;
     QByteArray array;
     int num = 0;
     forever
     {
         mutex.lock();
-        num = read(ttyFd,buff,4096);
+        num = read(ttyFd,buffer,4096);
         mutex.unlock();
         if((num != -1) && num)
         {
-            array = QByteArray(buff,num);
-            write(STDOUT_FILENO,buff,num);
-           // readBuffer.enqueue(array);
-           // qDebug()<<readBuffer.count();
+            buff.append(buffer,num);
+            if(debug)
+                write(STDOUT_FILENO,buffer,num);
         }
     }
 

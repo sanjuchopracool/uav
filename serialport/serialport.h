@@ -12,7 +12,6 @@
 #include <QObject>
 #include <QThread>
 #include <QMutex>
-#include <QQueue>
 enum BaudRateType
 {
     BAUD0,
@@ -93,6 +92,8 @@ public:
     void applySetting();
     void clearSetting();
     int writeToPort(char* buff,int num);
+    void showData() {debug = true;  }
+    void hideData() {debug = false; }
 
     void run();
 signals:
@@ -101,14 +102,14 @@ public slots:
     void slotReceived(QByteArray);
 
 public:
-    QQueue<QByteArray> writeBuffer;
-    QQueue<QByteArray> readBuffer;
 private:
     std::string deviceName;
     int ttyFd;
     int openFlags;
     struct termios config;
     QMutex mutex;
+    QByteArray buff;
+    bool debug;
     
 };
 

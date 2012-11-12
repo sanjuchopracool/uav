@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     port.setReadWrite();
     port.setBaudRate(BAUD38400);
     port.openDevice();
+    port.showData();
     port.start();
     //port.applySetting();
 
@@ -25,6 +26,7 @@ int main(int argc, char *argv[])
        // qDebug() << "Reading from STD INPUT" <<ch;
         qDebug() << "writing to port:" <<port.writeToPort(&ch,1);
         cin >> ch;
+       // port.hideData();
     }
     port.closeDevice();
     std::cin.get();
