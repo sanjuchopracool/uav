@@ -1,10 +1,11 @@
 #include "serialport.h"
-#include <iostream>
 void printError(const SerialPort* port)
 {
     qDebug() << port->getDeviceName()  << " Error: " <<QString(strerror(errno));
 }
-SerialPort::SerialPort()
+
+SerialPort::SerialPort(QObject *parent) :
+    QThread(parent)
 {
     debug = false;
 
@@ -34,6 +35,8 @@ SerialPort::SerialPort()
 
 
     config.c_cflag = CREAD | CLOCAL | CS8 | B9600;
+
+    connect(this,SIGNAL(signalReceied(QByteArray)),this,SLOT(slotReceived(QByteArray)));
 }
 
 bool SerialPort::openDevice()
@@ -252,7 +255,33 @@ void SerialPort::clearSetting()
 
 int SerialPort::writeToPort(char *buff, int num)
 {
-    return write(ttyFd,buff,num);
+    int bytes=0;
+    mutex.lock();
+    bytes = write(ttyFd,buff,num);
+    if(bytes < num)
+        qDebug() << "only" << bytes << "are written";
+    mutex.unlock();
+    return bytes;
+}
+
+QByteArray SerialPort::readBytes(int len)
+{
+    QByteArray retArray;
+    int byte = this->BytesAvailable();
+    mutex.lock();
+    if(len <= byte)
+    {
+        retArray = buff.left(len);
+        buff.remove(0,len);
+    }
+    else
+    {
+        qDebug() << len <<"bytes are not available";
+        retArray = buff.left(byte);
+        buff.remove(0,byte);
+    }
+    mutex.unlock();
+    return retArray;
 }
 
 void SerialPort::run()
@@ -264,13 +293,14 @@ void SerialPort::run()
     {
         mutex.lock();
         num = read(ttyFd,buffer,4096);
-        mutex.unlock();
         if((num != -1) && num)
         {
+            emit signalReceied(QByteArray(buffer,num));
             buff.append(buffer,num);
             if(debug)
                 write(STDOUT_FILENO,buffer,num);
         }
+        mutex.unlock();
     }
 
 }
@@ -278,6 +308,16 @@ void SerialPort::run()
 
 void SerialPort::slotReceived(QByteArray array)
 {
-    qDebug() << "Running";
+    qDebug() << QString(array);
 
 }
+
+
+/*
+ *Method to remove data from
+ *
+    QByteArray array("sanjuchopracool");
+    QByteArray read;
+    read = array.left(5);   //read = "sanju"
+    array.remove(0,5);     // array = "chopracool"
+ */

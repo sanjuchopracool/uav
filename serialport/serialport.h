@@ -1,6 +1,5 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
-
 #include <QDebug>
 #include <fcntl.h>
 #include <unistd.h>
@@ -12,6 +11,7 @@
 #include <QObject>
 #include <QThread>
 #include <QMutex>
+
 enum BaudRateType
 {
     BAUD0,
@@ -66,11 +66,12 @@ enum ParityType
     ODD,
     EVEN
 };
+
 class SerialPort : public QThread
 {
     Q_OBJECT
 public:
-    SerialPort();
+    explicit SerialPort(QObject *parent = 0);
     void setDeviceName(std::string name)
     {
         deviceName = name;
@@ -79,7 +80,7 @@ public:
     {
         return QString::fromStdString(deviceName);
     }
-    
+
     bool openDevice();
     void setReadOnly();
     void setWriteOnly();
@@ -92,25 +93,32 @@ public:
     void applySetting();
     void clearSetting();
     int writeToPort(char* buff,int num);
+    QByteArray  readBytes(int len);
     void showData() {debug = true;  }
     void hideData() {debug = false; }
+    int BytesAvailable() const
+    {
+        return this->buff.size();
+    }
 
+    QByteArray buff;
+
+protected:
     void run();
+
 signals:
     void signalReceied(QByteArray);
 public slots:
     void slotReceived(QByteArray);
 
-public:
 private:
     std::string deviceName;
     int ttyFd;
     int openFlags;
     struct termios config;
     QMutex mutex;
-    QByteArray buff;
     bool debug;
-    
+
 };
 
 #endif // SERIALPORT_H
