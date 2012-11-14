@@ -35,8 +35,6 @@ SerialPort::SerialPort(QObject *parent) :
 
 
     config.c_cflag = CREAD | CLOCAL | CS8 | B9600;
-
-    connect(this,SIGNAL(signalReceied(QByteArray)),this,SLOT(slotReceived(QByteArray)));
 }
 
 bool SerialPort::openDevice()
@@ -87,11 +85,15 @@ void SerialPort::setReadWrite()
 
 bool SerialPort::closeDevice()
 {
+    if(ttyFd = -1)
+        return false;
     if(close(ttyFd) == -1)
     {
         printError(this);
         return false;
     }
+    this->terminate();
+    this->wait();
     qDebug() <<"Successfully closed the device " << this->getDeviceName();
     return true ;
 }
