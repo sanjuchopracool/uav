@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     cin >> ch;
     while(ch !='q')
     {
-//        qDebug() << port.BytesAvailable();
+//        qDebug() << port.By intesAvailable();
 //        qDebug() << QString(port.readBytes(port.BytesAvailable()));
         qDebug() << "writing to port:" << ch ;
         port.writeToPort(&ch,1);

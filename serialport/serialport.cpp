@@ -88,14 +88,14 @@ bool SerialPort::closeDevice()
 {
     if(ttyFd == -1)
         return false;
-    return true;
     if(close(ttyFd) == -1)
     {
         printError(this);
         return false;
     }
     qDebug() <<"Successfully closed the device " << this->getDeviceName();
-    this->quit();
+    this->terminate();
+    this->wait();
     if(isRunning())
     {
         qDebug() <<"Problem in closing the thread for device " << this->getDeviceName() <<"retrying to close";
