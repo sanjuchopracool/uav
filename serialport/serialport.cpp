@@ -61,7 +61,7 @@ bool SerialPort::openDevice()
     ret = applySetting();
     if(ret)
     {
-        qDebug() << "Successfully opened the device " << this->getDeviceName();
+        qDebug() << "Successfully opened the device" << this->getDeviceName();
         return ret;
     }
 
@@ -93,16 +93,16 @@ bool SerialPort::closeDevice()
         printError(this);
         return false;
     }
-    qDebug() <<"Successfully closed the device " << this->getDeviceName();
+    qDebug() <<"Successfully closed the device" << this->getDeviceName();
     this->terminate();
     this->wait();
     if(isRunning())
     {
-        qDebug() <<"Problem in closing the thread for device " << this->getDeviceName() <<"retrying to close";
+        qDebug() <<"Problem in closing the thread for device" << this->getDeviceName() <<"retrying to close";
         return false ;
     }
 
-    qDebug() <<"Successfully closed the thread for device " << this->getDeviceName();
+    qDebug() <<"Successfully closed the thread for device" << this->getDeviceName();
     return true;
 }
 
