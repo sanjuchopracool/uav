@@ -90,18 +90,17 @@ public:
     void setDataBits(DataBitsType dbits);
     void setStopBits(StopBitsType stopBits);
     void setParity(ParityType parity);
-    void applySetting();
+    bool applySetting();
     void clearSetting();
-    int writeToPort(char* buff,int num);
+    void writeToPort(char* ReceiveBuff,int num);
     QByteArray  readBytes(int len);
     void showData() {debug = true;  }
     void hideData() {debug = false; }
     int BytesAvailable() const
     {
-        return this->buff.size();
+        return this->ReceiveBuff.size();
     }
 
-    QByteArray buff;
 
 protected:
     void run();
@@ -118,6 +117,8 @@ private:
     struct termios config;
     QMutex mutex;
     bool debug;
+    QByteArray ReceiveBuff;
+    QByteArray WriteBuff;
 
 };
 

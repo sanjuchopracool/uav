@@ -41,6 +41,8 @@ SerialPort::SerialPort(QObject *parent) :
 
 bool SerialPort::openDevice()
 {
+    bool ret = false;
+    mutex.lock();
     ttyFd = open(&deviceName[0],openFlags);
     if(ttyFd == -1)
     {
@@ -56,9 +58,16 @@ bool SerialPort::openDevice()
 
 
     fcntl(ttyFd,F_SETFL,O_NONBLOCK);
-    applySetting();
-    qDebug() << "Successfully opened the device " << this->getDeviceName();
-    return true;
+    ret = applySetting();
+    mutex.unlock();
+    if(ret)
+    {
+        qDebug() << "Successfully opened the device " << this->getDeviceName();
+        return ret;
+    }
+
+    qDebug() << "Unable to apply terminal setting";
+    return false;
 }
 
 void SerialPort::setReadOnly()
@@ -238,14 +247,14 @@ void SerialPort::setParity(ParityType parity)
         config.c_cflag |= PARODD;
 }
 
-void SerialPort::applySetting()
+bool SerialPort::applySetting()
 {
-//    qDebug() <<ttyFd;
-//    qDebug() << config.c_cflag;
     if(ttyFd != -1)
-        tcsetattr(ttyFd, TCSANOW, &config);
-    else
-        qDebug() <<"Error";
+    {
+        if(tcsetattr(ttyFd, TCSANOW, &config) == 0)
+            return true;
+    }
+    return false;
 }
 
 void SerialPort::clearSetting()
@@ -253,54 +262,73 @@ void SerialPort::clearSetting()
     memset(&config,0,sizeof(config));
 }
 
-int SerialPort::writeToPort(char *buff, int num)
+void SerialPort::writeToPort(char *buff, int num)
 {
-    int bytes=0;
-    mutex.lock();
-    bytes = write(ttyFd,buff,num);
-    if(bytes < num)
-        qDebug() << "only" << bytes << "are written";
-    mutex.unlock();
-    return bytes;
+    WriteBuff.append(buff,num);
 }
 
 QByteArray SerialPort::readBytes(int len)
 {
     QByteArray retArray;
     int byte = this->BytesAvailable();
-    mutex.lock();
+   // mutex.lock();
     if(len <= byte)
     {
-        retArray = buff.left(len);
-        buff.remove(0,len);
+        retArray = ReceiveBuff.left(len);
+        ReceiveBuff.remove(0,len);
     }
     else
     {
         qDebug() << len <<"bytes are not available";
-        retArray = buff.left(byte);
-        buff.remove(0,byte);
+        retArray = ReceiveBuff.left(byte);
+        ReceiveBuff.remove(0,byte);
     }
-    mutex.unlock();
+   // mutex.unlock();
     return retArray;
 }
 
 void SerialPort::run()
 {
-    char buffer[4096] ;
+    char buffer[4096] ,*charPtr;
     QByteArray array;
-    int num = 0;
+    int num = 0, numSent=0;
     forever
     {
         mutex.lock();
+
+        /*
+         *Reading from port
+         */
+
         num = read(ttyFd,buffer,4096);
         if((num != -1) && num)
         {
-            emit signalReceied(QByteArray(buffer,num));
-            buff.append(buffer,num);
+            ReceiveBuff.append(buffer,num);
             if(debug)
                 write(STDOUT_FILENO,buffer,num);
         }
         mutex.unlock();
+
+        /*
+         *writing to port
+         */
+
+        num = WriteBuff.size();
+        if(num)
+        {
+            charPtr = WriteBuff.data();
+            mutex.lock();
+            numSent = write(ttyFd,charPtr,num);
+            mutex.unlock();
+            if((numSent != -1) && numSent)
+            {
+                WriteBuff.remove(0,numSent);
+            }
+            else
+                qDebug() <<"Error in writing to port";
+        }
+
+
     }
 
 }
