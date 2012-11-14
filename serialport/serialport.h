@@ -72,15 +72,15 @@ class SerialPort : public QThread
     Q_OBJECT
 public:
     explicit SerialPort(QObject *parent = 0);
-    void setDeviceName(std::string name)
+
+    void setDeviceName(QString name)
     {
-        deviceName = name;
+        deviceName = name.toStdString();
     }
     QString getDeviceName() const
     {
         return QString::fromStdString(deviceName);
     }
-
     bool openDevice();
     void setReadOnly();
     void setWriteOnly();
@@ -96,6 +96,7 @@ public:
     QByteArray  readBytes(int len);
     void showData() {debug = true;  }
     void hideData() {debug = false; }
+    void stopDevice() {stopThread = false;}
     int BytesAvailable() const
     {
         return this->ReceiveBuff.size();
@@ -119,6 +120,7 @@ private:
     bool debug;
     QByteArray ReceiveBuff;
     QByteArray WriteBuff;
+    bool stopThread;
 
 };
 

@@ -7,6 +7,7 @@ void printError(const SerialPort* port)
 SerialPort::SerialPort(QObject *parent) :
     QThread(parent)
 {
+    stopThread = false;
     debug = false;
 
     ttyFd = -1 ;   //by default fd should be -1
@@ -85,17 +86,23 @@ void SerialPort::setReadWrite()
 
 bool SerialPort::closeDevice()
 {
-    if(ttyFd = -1)
+    if(ttyFd == -1)
         return false;
+    return true;
     if(close(ttyFd) == -1)
     {
         printError(this);
         return false;
     }
-    this->terminate();
-    this->wait();
     qDebug() <<"Successfully closed the device " << this->getDeviceName();
-    return true ;
+    this->quit();
+    if(isRunning())
+    {
+        qDebug() <<"Problem in closing the thread for device " << this->getDeviceName() <<"retrying to close";
+        return false ;
+    }
+
+    return true;
 }
 
 void SerialPort::setBaudRate(enum BaudRateType baud)
@@ -294,7 +301,7 @@ void SerialPort::run()
     char buffer[4096] ,*charPtr;
     QByteArray array;
     int num = 0, numSent=0;
-    forever
+    while(!stopThread)
     {
         mutex.lock();
 
