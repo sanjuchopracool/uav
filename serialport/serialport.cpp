@@ -57,8 +57,8 @@ bool SerialPort::openDevice()
 
 
     fcntl(ttyFd,F_SETFL,O_NONBLOCK);
-    ret = applySetting();
     mutex.unlock();
+    ret = applySetting();
     if(ret)
     {
         qDebug() << "Successfully opened the device " << this->getDeviceName();
@@ -102,6 +102,7 @@ bool SerialPort::closeDevice()
         return false ;
     }
 
+    qDebug() <<"Successfully closed the thread for device " << this->getDeviceName();
     return true;
 }
 
@@ -260,8 +261,13 @@ bool SerialPort::applySetting()
 {
     if(ttyFd != -1)
     {
+        mutex.lock();
         if(tcsetattr(ttyFd, TCSANOW, &config) == 0)
+        {
+            mutex.unlock();
             return true;
+        }
+        mutex.unlock();
     }
     return false;
 }
