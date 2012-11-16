@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
    // qDebug() <<port.getDeviceName();
     port.setReadWrite();
     port.setBaudRate(BAUD38400);
-    port.openDevice();
+    if(!port.openDevice()) return -1;
     port.showData();
     port.start();
     char ch='q';

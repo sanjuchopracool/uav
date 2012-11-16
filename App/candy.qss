@@ -1,0 +1,137 @@
+QWidget
+{
+    font-family : Lucida Grande;
+    font : 10pt;
+    background-color:#4b4b4b;
+}
+
+QLineEdit
+ {
+    background-color:white;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding-right: 15px;
+    selection-background-color: #97bafa;
+    selection-color: white;
+    padding: 0px 8px;
+}
+QListView
+{
+   background-color:white;
+   border: 2px solid green;
+   border-radius: 8px;
+   selection-background-color: #97bafa;
+   selection-color: white;
+   padding: 2px 2px;
+}
+QLineEdit::hover
+{
+    border:2px solid #97bafa;
+}
+QLineEdit::focus
+{
+    border:2px solid black;
+}
+QLineEdit::disabled
+{
+    border:1px solid gray;
+    background-color:rgb(225, 216, 202);
+}
+QComboBox,
+QPushButton
+{
+    color : black;
+    border-image :url(:/images/normal.png) 9;
+    border-width: 9px;
+    padding: -10px 0px;
+    min-height: 25px;
+    min-width: 50px;
+    background-color :transparent;
+}
+QGroupBox
+{
+    color : black;
+    border-image :url(:/images/groupbox.png) 30;
+    border-width: 10px;
+}
+QGroupBox::title
+{
+    background-color :transparent;
+}
+
+QComboBox:disabled,
+QPushButton:disabled
+{
+    border-image: url(:/images/disabled.png) 9;
+}
+QComboBox::drop-down
+{
+ top:-2px;
+ image: url(:/images/down-arrow.png);
+ background-color:transparent;
+}
+QComboBox::drop-down:on
+{
+ top:-1px;
+}
+QComboBox:focus,
+QPushButton:focus
+{
+    border-image: url(:/images/hover.png) 9;
+}
+QComboBox:hover,
+QPushButton:hover
+{
+    border-image: url(:/images/focus.png) 9;
+}
+QPushButton:pressed,
+QComboBox:on
+{
+    border-image: url(:/images/pressed.png) 9;
+    padding-top : -14;
+    padding-bottom : -16
+}
+QCheckBox
+{
+ background-color :transparent;
+ color :black;
+}
+QCheckBox::indicator
+{
+    color:white;
+    width : 20;
+    height:20;
+    background-image : url(:/images/check_normal.png);
+}
+QCheckBox::indicator:hover
+{
+
+    background-image : url(:/images/check_hover.png);
+}
+QCheckBox::indicator:checked:hover
+{
+    background-image : url(:/images/check_clicked.png);
+}
+QCheckBox::indicator:checked:!hover
+{
+    background-image : url(:/images/check_clicked.png);
+}
+QCheckBox::indicator:checked:disabled
+{
+    background-image : url(:/images/checked-disabled.png);
+}
+QCheckBox::indicator:!checked:disabled
+{
+    background-image : url(:/images/check-disabled.png);
+}
+QTextEdit
+{
+min-width:500;
+background-color:white;
+selection-background-color: #97bafa;
+selection-color: white;
+}
+QLabel
+{
+     background-color :transparent;
+}
