@@ -12,6 +12,6 @@ int main(int argc, char *argv[])
     QString styleString = style.readAll();
     w.setStyleSheet(styleString);
     w.show();
-    
+    w.setWhatsThis("Serial port Plot is used to get data from serial and plot curves");
     return a.exec();
 }

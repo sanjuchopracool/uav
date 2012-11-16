@@ -11,6 +11,7 @@ SerialApp::SerialApp(QWidget *parent)
     stopBitCheck->setToolTip("By default use 1 Stop Bit");
 
     portBox = new QComboBox;
+    portBox->setToolTip("click to add custom port");
     portBox->setEditable(true);
     baudBox = new QComboBox;
     dataBitBox = new QComboBox;
@@ -76,8 +77,7 @@ SerialApp::SerialApp(QWidget *parent)
     //dummy add
     portBox->addItems(list);
     baudBox->addItems(list);
-    //settingGroupBox->setDisabled(true);
-
+    settingGroupBox->setDisabled(true);
 
 }
 
