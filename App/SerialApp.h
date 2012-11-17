@@ -12,7 +12,8 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QTextEdit>
+#include <QPlainTextEdit>
+#include "serialport.h"
 
 class SerialApp : public QWidget
 {
@@ -22,6 +23,14 @@ public:
     SerialApp(QWidget *parent = 0);
     ~SerialApp();
 
+public slots:
+    void open();
+    void close();
+    void send();
+    void dataReceived(QByteArray array);
+    void clear() {this->textEdit->clear();}
+    void refreshDevices();
+    void closeEvent(QCloseEvent *);
 private:
     QLabel* portLabel;
     QLabel* baudLabel;
@@ -42,10 +51,11 @@ private:
     QPushButton* closeButton;
     QPushButton* clearButton;
     QPushButton* saveButton;
+    QPushButton* refreshButton;
 
     QPushButton* sendButton;
     QLineEdit* sendEdit;
-    QTextEdit* textEdit;
+    QPlainTextEdit* textEdit;
     QCheckBox* readPortCheck;
     QCheckBox* writePortCheck;
 
@@ -55,6 +65,8 @@ private:
     QVBoxLayout* buttonLayout;
     QVBoxLayout* textLayout;
     QHBoxLayout* sendWidgetLayout;
+
+    SerialPort port;
 };
 
 #endif // SERIALAPP_H

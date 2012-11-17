@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        SerialApp.cpp
+        SerialApp.cpp \
+    serialport.cpp
 
-HEADERS  += SerialApp.h
+HEADERS  += SerialApp.h \
+    serialport.h
 
 RESOURCES += \
     myres.qrc

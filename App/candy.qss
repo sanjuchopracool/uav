@@ -1,7 +1,6 @@
 QWidget
 {
     font-family : Lucida Grande;
-    font : 10pt;
     background-color:#858685;
 }
 
@@ -132,19 +131,21 @@ QCheckBox::indicator:checked:focus
 {
     background-image : url(:/images/checked-hover.png);
 }
-QTextEdit
+QPlainTextEdit
 {
+font-family:Liberation Mono;
+font : 8pt;
 border-radius:5px;
 min-width:500;
 background-color:white;
 selection-background-color: #97bafa;
 selection-color: white;
 }
-QTextEdit:!editable:focus
+QPlainTextEdit:!editable:focus
 {
 border:2px solid black;
 }
-QTextEdit:hover
+QPlainTextEdit:hover
 {
     border:2px solid #97bafa;
 }
@@ -152,3 +153,40 @@ QLabel
 {
      background-color :transparent;
 }
+
+QScrollBar
+{
+      background-color:#4b4b4b;
+      border: 1px solid black;
+      width: 15px;
+      margin: 22px 0 22px 0;
+      border-radius:5;
+  }
+  QScrollBar::handle
+  {
+  min-height:20;
+  border: 1px solid gray;
+  background-color:#97bafa;
+  border-radius:5px;
+  }
+  QScrollBar::add-line {
+      border: 1px solid black;
+      background: #bebebe;
+      height: 15px;
+      border-radius:5;
+      subcontrol-position: bottom;
+      subcontrol-origin: margin;
+  }
+
+  QScrollBar::sub-line {
+      border: 1px solid black;
+      background: #bebebe;
+      height: 15px;
+      border-radius:5;
+      subcontrol-position: top;
+      subcontrol-origin: margin;
+  }
+
+  QScrollBar::add-page, QScrollBar::sub-page {
+      background: none;
+  }

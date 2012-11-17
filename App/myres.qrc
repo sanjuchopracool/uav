@@ -26,5 +26,6 @@
         <file>images/checked-hover.png</file>
         <file>images/down-arrow.png</file>
         <file>images/button-gray.png</file>
+        <file>images/scroll-handle.png</file>
     </qresource>
 </RCC>
