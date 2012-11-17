@@ -1,15 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/Untitled.png</file>
-        <file>images/background.png</file>
-        <file>images/1.png</file>
-        <file>images/blue.png</file>
-        <file>images/button-hover.png</file>
-        <file>images/button-pressed.png</file>
-        <file>images/button.png</file>
-        <file>images/button2.png</file>
         <file>images/focus.png</file>
-        <file>images/Gray.png</file>
         <file>images/hover.png</file>
         <file>images/normal.png</file>
         <file>images/pressed.png</file>
