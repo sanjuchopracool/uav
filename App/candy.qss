@@ -17,8 +17,9 @@ QLineEdit
 }
 QListView
 {
-   background-color:white;
-   border: 2px solid green;
+   color : white;
+   background-color:#4b4b4b;
+   border: 1px solid #97bafa;
    border-radius: 8px;
    selection-background-color: #97bafa;
    selection-color: white;
@@ -66,14 +67,15 @@ QPushButton:disabled
 }
 QComboBox::drop-down
 {
-height:15;
- top:-2px;
+ height:20;
+ left:5;
+ top:-8px;
  image: url(:/images/down-arrow.png);
  background-color:transparent;
 }
 QComboBox::drop-down:on
 {
- top:-1px;
+ top:-5px;
 }
 QComboBox:focus,
 QPushButton:focus
