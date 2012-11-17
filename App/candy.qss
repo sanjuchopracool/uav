@@ -2,7 +2,7 @@ QWidget
 {
     font-family : Lucida Grande;
     font : 10pt;
-    background-color:#4b4b4b;
+    background-color:#858685;
 }
 
 QLineEdit
@@ -25,11 +25,11 @@ QListView
    selection-color: white;
    padding: 2px 2px;
 }
-QLineEdit::hover
+QLineEdit:hover
 {
     border:2px solid #97bafa;
 }
-QLineEdit::focus
+QLineEdit:focus
 {
     border:2px solid black;
 }
@@ -57,6 +57,8 @@ QGroupBox
 }
 QGroupBox::title
 {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
     background-color :transparent;
 }
 
@@ -83,7 +85,7 @@ QPushButton:focus
     border-image: url(:/images/hover.png) 9;
 }
 QComboBox:!focus:hover,
-QPushButton:hover
+QPushButton:!focus:hover
 {
     border-image: url(:/images/focus.png) 9;
 }
@@ -132,10 +134,19 @@ QCheckBox::indicator:checked:focus
 }
 QTextEdit
 {
+border-radius:5px;
 min-width:500;
 background-color:white;
 selection-background-color: #97bafa;
 selection-color: white;
+}
+QTextEdit:!editable:focus
+{
+border:2px solid black;
+}
+QTextEdit:hover
+{
+    border:2px solid #97bafa;
 }
 QLabel
 {
