@@ -82,7 +82,7 @@ QPushButton:focus
 {
     border-image: url(:/images/hover.png) 9;
 }
-QComboBox:hover,
+QComboBox:!focus:hover,
 QPushButton:hover
 {
     border-image: url(:/images/focus.png) 9;
