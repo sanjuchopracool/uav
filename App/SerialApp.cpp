@@ -77,7 +77,7 @@ SerialApp::SerialApp(QWidget *parent)
     //dummy add
     portBox->addItems(list);
     baudBox->addItems(list);
-    settingGroupBox->setDisabled(true);
+    //settingGroupBox->setDisabled(true);
 
 }
 

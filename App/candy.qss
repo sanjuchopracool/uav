@@ -66,6 +66,7 @@ QPushButton:disabled
 }
 QComboBox::drop-down
 {
+height:15;
  top:-2px;
  image: url(:/images/down-arrow.png);
  background-color:transparent;

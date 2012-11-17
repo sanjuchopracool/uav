@@ -24,5 +24,6 @@
         <file>images/checked-disabled.png</file>
         <file>images/button-hover2.png</file>
         <file>images/checked-hover.png</file>
+        <file>images/down-arrow.png</file>
     </qresource>
 </RCC>
