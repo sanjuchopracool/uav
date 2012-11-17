@@ -72,7 +72,7 @@ class SerialPort : public QThread
     Q_OBJECT
 public:
     explicit SerialPort(QObject *parent = 0);
-
+    ~SerialPort();
     void setDeviceName(QString name)
     {
         deviceName = name.toStdString();
@@ -121,6 +121,7 @@ private:
     QByteArray ReceiveBuff;
     QByteArray WriteBuff;
     bool stopThread;
+    bool readFlag,writeFlag;
 
 };
 

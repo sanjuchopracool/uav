@@ -9,7 +9,8 @@ SerialPort::SerialPort(QObject *parent) :
 {
     stopThread = false;
     debug = false;
-
+    readFlag = true;
+    writeFlag = true;
     ttyFd = -1 ;   //by default fd should be -1
     deviceName = "/dev/ttyUSB0" ;               //default is ttyUSB0 my laptop does not have ttyso
     openFlags = O_NONBLOCK | O_NOCTTY ;         //use non blocking (used for terminal , fifi ,sockets),and
@@ -71,17 +72,23 @@ bool SerialPort::openDevice()
 
 void SerialPort::setReadOnly()
 {
-    openFlags |= O_RDONLY;
+    openFlags = O_RDONLY;
+    readFlag = true;
+    writeFlag=false;
 }
 
 void SerialPort::setWriteOnly()
 {
-    openFlags |= O_WRONLY;
+    openFlags = O_WRONLY;
+    readFlag = false;
+    writeFlag = true;
 }
 
 void SerialPort::setReadWrite()
 {
-    openFlags |= O_RDWR;
+    openFlags = O_RDWR;
+    readFlag = true;
+    writeFlag = true;
 }
 
 bool SerialPort::closeDevice()
@@ -93,15 +100,7 @@ bool SerialPort::closeDevice()
         printError(this);
         return false;
     }
-    qDebug() <<"Successfully closed the device" << this->getDeviceName();
-    this->terminate();
-    this->wait();
-    if(isRunning())
-    {
-        qDebug() <<"Problem in closing the thread for device" << this->getDeviceName() <<"retrying to close";
-        return false ;
-    }
-
+    ttyFd = -1;
     qDebug() <<"Successfully closed the thread for device" << this->getDeviceName();
     return true;
 }
@@ -269,6 +268,7 @@ bool SerialPort::applySetting()
         }
         mutex.unlock();
     }
+    printError(this);
     return false;
 }
 
@@ -309,20 +309,25 @@ void SerialPort::run()
     int num = 0, numSent=0;
     while(!stopThread)
     {
-        mutex.lock();
+        if(readFlag)
+        {
+            mutex.lock();
 
-        /*
+            /*
          *Reading from port
          */
 
-        num = read(ttyFd,buffer,4096);
-        if((num != -1) && num)
-        {
-            ReceiveBuff.append(buffer,num);
-            if(debug)
-                write(STDOUT_FILENO,buffer,num);
+            num = read(ttyFd,buffer,4096);
+            if((num != -1) && num)
+            {
+                ReceiveBuff.append(buffer,num);
+                array = QByteArray(buffer,num);
+                emit signalReceied(array);
+                if(debug)
+                    write(STDOUT_FILENO,buffer,num);
+            }
+            mutex.unlock();
         }
-        mutex.unlock();
 
         /*
          *writing to port
@@ -331,8 +336,8 @@ void SerialPort::run()
         num = WriteBuff.size();
         if(num)
         {
-            charPtr = WriteBuff.data();
             mutex.lock();
+            charPtr = WriteBuff.data();
             numSent = write(ttyFd,charPtr,num);
             mutex.unlock();
             if((numSent != -1) && numSent)
@@ -355,6 +360,13 @@ void SerialPort::slotReceived(QByteArray array)
 
 }
 
+SerialPort::~SerialPort()
+{
+    this->stopThread = true;
+    this->terminate();
+    this->wait();
+    this->closeDevice();
+}
 
 /*
  *Method to remove data from
