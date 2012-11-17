@@ -18,5 +18,7 @@
         <file>images/down-arrow.png</file>
         <file>images/button-gray.png</file>
         <file>images/scroll-handle.png</file>
+        <file>images/zoom-in.png</file>
+        <file>images/zoom-out.png</file>
     </qresource>
 </RCC>

@@ -14,6 +14,8 @@
 #include <QVBoxLayout>
 #include <QPlainTextEdit>
 #include "serialport.h"
+#include "Plotter.h"
+#include <QSplitter>
 
 class SerialApp : public QWidget
 {
@@ -30,6 +32,7 @@ public slots:
     void dataReceived(QByteArray array);
     void clear() {this->textEdit->clear();}
     void refreshDevices();
+    void save();
     void closeEvent(QCloseEvent *);
 private:
     QLabel* portLabel;
@@ -65,8 +68,10 @@ private:
     QVBoxLayout* buttonLayout;
     QVBoxLayout* textLayout;
     QHBoxLayout* sendWidgetLayout;
+    QVBoxLayout* mainLayout;
 
     SerialPort port;
+    Plotter* plot;
 };
 
 #endif // SERIALAPP_H

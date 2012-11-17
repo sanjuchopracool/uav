@@ -14,13 +14,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         SerialApp.cpp \
-    serialport.cpp
+    serialport.cpp \
+    Plotter.cpp
 
 HEADERS  += SerialApp.h \
-    serialport.h
+    serialport.h \
+    Plotter.h
 
 RESOURCES += \
     myres.qrc
 
 OTHER_FILES += \
-    candy.qss
+    candy.qss \
+    images/zoom-out.png \
+    images/zoom-in.png

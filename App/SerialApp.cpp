@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QMessageBox>
+#include <QFileDialog>
 
 Q_DECLARE_METATYPE(BaudRateType)
 Q_DECLARE_METATYPE(StopBitsType)
@@ -26,6 +27,24 @@ void SerialApp::refreshDevices()
     }
     this->portBox->addItems(deviceList);
 
+}
+
+void SerialApp::save()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,"Save File",QDir::homePath(),"Text Files (*.txt) ;; CSV (*csv)");
+    if(fileName.isEmpty())
+        return;
+
+    QFile saveFile(fileName);
+    if(!saveFile.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(this,"Error in saving","Unable to save the file.\nPlease check file permissions.");
+        return;
+    }
+
+    QTextStream stream(&saveFile);
+    stream << this->textEdit->toPlainText();
+    saveFile.close();
 }
 
 SerialApp::SerialApp(QWidget *parent)
@@ -149,7 +168,12 @@ SerialApp::SerialApp(QWidget *parent)
     upperMainLayout = new QHBoxLayout;
     upperMainLayout->addLayout(upperleftVLayout);
     upperMainLayout->addLayout(textLayout);
-    this->setLayout(upperMainLayout);
+
+    plot = new Plotter;
+    mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(upperMainLayout);
+    mainLayout->addWidget(plot);
+    this->setLayout(mainLayout);
 
     this->closeButton->setDisabled(true);
     this->sendButton->setDisabled(true);
@@ -163,6 +187,7 @@ SerialApp::SerialApp(QWidget *parent)
     connect(clearButton,SIGNAL(clicked()),this,SLOT(clear()));
     connect(sendEdit,SIGNAL(returnPressed()),this,SLOT(send()));
     connect(refreshButton,SIGNAL(clicked()),this,SLOT(refreshDevices()));
+    connect(saveButton,SIGNAL(clicked()),this,SLOT(save()));
 
 }
 
@@ -173,6 +198,7 @@ SerialApp::~SerialApp()
 
 void SerialApp::open()
 {
+
     port.setDeviceName("/dev/" + portBox->currentText());
     if(readPortCheck->isChecked() && writePortCheck->isChecked())
     {
