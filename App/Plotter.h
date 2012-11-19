@@ -59,6 +59,7 @@ private:
     bool antiAliasing;
     QString xAxisText;
     QString yAxisText;
+    bool showText;
 };
 class PlotSettings
 {

@@ -11,7 +11,6 @@ Q_DECLARE_METATYPE(ParityType)
 
 void SerialApp::refreshDevices()
 {
-    this->portBox->clear();
     QStringList deviceList;
     QDir dir("/dev/");
     QStringList filters;
@@ -50,6 +49,7 @@ void SerialApp::save()
 SerialApp::SerialApp(QWidget *parent)
     : QWidget(parent)
 {
+    plot = 0;
     portLabel = new QLabel("Select Port");
     baudLabel = new QLabel("Baud Rate");
     dataBitLabel = new QLabel("Data Bits");
@@ -179,6 +179,8 @@ SerialApp::SerialApp(QWidget *parent)
     this->sendButton->setDisabled(true);
     this->sendEdit->setDisabled(true);
     //settingGroupBox->setDisabled(true);
+
+    plot->hide();
 
     //connections
     connect(openButton,SIGNAL(clicked()),this,SLOT(open()));
