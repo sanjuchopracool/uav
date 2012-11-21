@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'SerialApp.h'
 **
-** Created: Sun Nov 18 20:14:58 2012
+** Created: Wed Nov 21 00:01:27 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SerialApp[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -39,6 +39,7 @@ static const uint qt_meta_data_SerialApp[] = {
       72,   10,   10,   10, 0x0a,
       89,   10,   10,   10, 0x0a,
       96,   10,   10,   10, 0x0a,
+     121,   10,   10,   10, 0x0a,
 
        0        // eod
 };
@@ -47,7 +48,7 @@ static const char qt_meta_stringdata_SerialApp[] = {
     "SerialApp\0\0open()\0close()\0send()\0array\0"
     "dataReceived(QByteArray)\0clear()\0"
     "refreshDevices()\0save()\0"
-    "closeEvent(QCloseEvent*)\0"
+    "closeEvent(QCloseEvent*)\0gridButtonSlot()\0"
 };
 
 void SerialApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -64,6 +65,7 @@ void SerialApp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 5: _t->refreshDevices(); break;
         case 6: _t->save(); break;
         case 7: _t->closeEvent((*reinterpret_cast< QCloseEvent*(*)>(_a[1]))); break;
+        case 8: _t->gridButtonSlot(); break;
         default: ;
         }
     }
@@ -101,9 +103,9 @@ int SerialApp::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }

@@ -20,5 +20,7 @@
         <file>images/scroll-handle.png</file>
         <file>images/zoom-in.png</file>
         <file>images/zoom-out.png</file>
+        <file>images/graph.png</file>
+        <file>images/grid.png</file>
     </qresource>
 </RCC>

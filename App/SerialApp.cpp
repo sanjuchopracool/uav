@@ -24,6 +24,7 @@ void SerialApp::refreshDevices()
         QFileInfo fileInfo = list.at(i);
         deviceList << fileInfo.fileName();
     }
+    this->portBox->clear();
     this->portBox->addItems(deviceList);
 
 }
@@ -136,12 +137,20 @@ SerialApp::SerialApp(QWidget *parent)
     clearButton = new QPushButton("Clear");
     saveButton = new QPushButton("Save");
     refreshButton = new QPushButton("Refresh list");
+    gridButton = new QToolButton;
+    gridButton->setToolTip("Show Plot");
+    gridButton->setIconSize(QSize(75,50));
+    gridButton->setCheckable(true);
+    gridButton->setIcon(QIcon(":/images/graph.png"));
+    gridButton->adjustSize();
 
     buttonLayout = new QVBoxLayout;
     buttonLayout->addSpacing(25);
     buttonLayout->addWidget(refreshButton);
     buttonLayout->addWidget(openButton);
     buttonLayout->addWidget(closeButton);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(gridButton);
     buttonLayout->addStretch();
     buttonLayout->addWidget(clearButton);
     buttonLayout->addWidget(saveButton);
@@ -190,6 +199,7 @@ SerialApp::SerialApp(QWidget *parent)
     connect(sendEdit,SIGNAL(returnPressed()),this,SLOT(send()));
     connect(refreshButton,SIGNAL(clicked()),this,SLOT(refreshDevices()));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(save()));
+    connect(this->gridButton,SIGNAL(clicked()),this,SLOT(gridButtonSlot()));
 
 }
 
@@ -302,4 +312,18 @@ void SerialApp::closeEvent(QCloseEvent *)
     port.closeDevice();
     port.~SerialPort();
 
+}
+
+void SerialApp::gridButtonSlot()
+{
+    if(!gridButton->isChecked())
+    {
+        gridButton->setToolTip("Show Plot");
+        this->plot->hide();
+    }
+    else
+    {
+        this->gridButton->setToolTip("Hide Plot");
+        this->plot->show();
+    }
 }

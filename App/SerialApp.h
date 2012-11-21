@@ -16,6 +16,7 @@
 #include "serialport.h"
 #include "Plotter.h"
 #include <QSplitter>
+#include <QToolButton>
 
 class SerialApp : public QWidget
 {
@@ -34,6 +35,7 @@ public slots:
     void refreshDevices();
     void save();
     void closeEvent(QCloseEvent *);
+    void gridButtonSlot();
 private:
     QLabel* portLabel;
     QLabel* baudLabel;
@@ -69,6 +71,7 @@ private:
     QVBoxLayout* textLayout;
     QHBoxLayout* sendWidgetLayout;
     QVBoxLayout* mainLayout;
+    QToolButton* gridButton;
 
     SerialPort port;
     Plotter* plot;

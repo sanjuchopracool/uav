@@ -36,7 +36,7 @@ Plotter::Plotter(QWidget *parent) :
     showGridButton->setCheckable(true);
     showGridButton->setToolTip("Show Grid");
     showGridButton->setIconSize(QSize(35,35));
-    showGridButton->setIcon(QIcon(":/images/showgrid.png"));
+    showGridButton->setIcon(QIcon(":/images/grid.png"));
     showGridButton->adjustSize();
     connect(showGridButton, SIGNAL(clicked()), this, SLOT(showGridSlot()));
 
