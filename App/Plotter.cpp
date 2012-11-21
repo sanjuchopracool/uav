@@ -1,430 +1,135 @@
 #include "Plotter.h"
-#include<QtGui>
-#include <cmath>
+#include <QStylePainter>
+#include <QDebug>
 
-Plotter::Plotter(QWidget *parent) :
-    QWidget(parent)
+Plotter::Plotter(QWidget *parent)
+    : QWidget(parent)
 {
-   // backgroundColor = QColor(100,93,90);
+    backgroundColor = Qt::black;
     textColor = Qt::blue;
-    gridColor = QColor(100,93,90);
+    noOfCurves = 0;
+    noOfPoints = 99;
+    minY = 0;
+    maxY = 100;
+    this->numXTicks = 10;
+    this->numYTicks = 10;
     antiAliasing = false;
-    this->setMinimumHeight(300);
-    showGrid  = true;
-    showText = false;
-    xAxisText = "X-Axis (mm)";
-    yAxisText = "Y-Axis (val)";
-    setBackgroundRole(QPalette::Dark);
-    setAutoFillBackground(true);
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setFocusPolicy(Qt::StrongFocus);
-    rubberBandShown = false;
-    zoomInButton = new QToolButton(this);
-    zoomInButton->setToolTip("Zoom In (+)");
-    zoomInButton->setIconSize(QSize(35,35));
-    zoomInButton->setIcon(QIcon(":/images/zoom-in.png"));
-    zoomInButton->adjustSize();
-    connect(zoomInButton, SIGNAL(clicked()), this, SLOT(zoomIn()));
-    zoomOutButton = new QToolButton(this);
-    zoomOutButton->setToolTip("Zoom out (-)");
-    zoomOutButton->setIconSize(QSize(35,35));
-    zoomOutButton->setIcon(QIcon(":/images/zoom-out.png"));
-    zoomOutButton->adjustSize();
-    connect(zoomOutButton, SIGNAL(clicked()), this, SLOT(zoomOut()));
-
-    showGridButton = new QToolButton(this);
-    showGridButton->setCheckable(true);
-    showGridButton->setToolTip("Show Grid");
-    showGridButton->setIconSize(QSize(35,35));
-    showGridButton->setIcon(QIcon(":/images/grid.png"));
-    showGridButton->adjustSize();
-    connect(showGridButton, SIGNAL(clicked()), this, SLOT(showGridSlot()));
-
-    setPlotSettings(PlotSettings());
-
-
 }
 
-void Plotter::setPlotSettings(const PlotSettings& settings)
+void Plotter::refreshImage()
 {
-    zoomStack.clear();
-    zoomStack.append(settings);
-    curZoom = 0;
-    zoomInButton->setEnabled(false);
-    zoomOutButton->setEnabled(false);
-    refreshPixmap();
-}
-
-void Plotter::zoomOut()
-{
-    if(curZoom > 0)
-    {
-        --curZoom;
-        zoomOutButton->setEnabled(curZoom > 0);
-        zoomInButton->setEnabled(true);
-        zoomInButton->show();
-        refreshPixmap();
-    }
-}
-
-void Plotter::showGridSlot()
-{
-    showGrid = !showGrid;
-    if(showGrid)
-        showGridButton->setToolTip("Hide Grid");
-    else
-        showGridButton->setToolTip("Show Grid");
-    refreshPixmap();
-}
-
-void Plotter::zoomIn()
-{
-    if(curZoom < (zoomStack.count() -1))
-    {
-        ++curZoom;
-        zoomInButton->setEnabled(curZoom <(zoomStack.count() -1));
-        zoomOutButton->setEnabled(true);
-        zoomOutButton->show();
-        refreshPixmap();
-    }
-}
-void Plotter::setCurveData(int id, QVector<QPointF> &data, QPen pen)
-{
-    curveMap[id] = data;
-    penMap[id] = pen;
-    refreshPixmap();
-}
-
-void Plotter::clearCurve(int id)
-{
-    curveMap.remove(id);
-    refreshPixmap();
-}
-
-QSize Plotter::minimumSizeHint() const
-{
-    return QSize(Margin*6,Margin*4);
-}
-
-QSize Plotter::sizeHint() const
-{
-    return QSize(Margin*12 ,Margin*8);
-}
-
-void Plotter::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event)
-   // qDebug() << "Painitng ++++++++++++++++++++++";
-    QStylePainter painter(this);
-    painter.drawPixmap(0,0,pixmap);
-
-    if(rubberBandShown)
-    {
-        painter.setPen(palette().light().color());
-        painter.drawRect(rubberBandRect.normalized().adjusted(0 , 0 , -1 , -1));
-    }
-    if(hasFocus())
-    {
-        QStyleOptionFocusRect option;
-        option.initFrom(this);
-        option.backgroundColor = palette().dark().color();
-        painter.drawPrimitive(QStyle::PE_FrameFocusRect,option);
-    }
-}
-
-void Plotter::resizeEvent(QResizeEvent *event)
-{
-    Q_UNUSED(event)
-    int x = width() - zoomInButton->width() -zoomInButton->width() - showGridButton->width() - 15 ;
-    showGridButton->move(x, 5 );
-    zoomInButton->move(x + 5 + showGridButton->width() , 5);
-    zoomOutButton->move(x + 10 + zoomInButton->width() + showGridButton->width(), 5);
-    refreshPixmap();
-    zoomStack[0].adjust();
-}
-
-void Plotter::mousePressEvent(QMouseEvent *event)
-{
-    QRect rect(Margin,Margin,
-               width() - 2 * Margin , height() - 2 * Margin);
-    if(event->button() == Qt::LeftButton)
-    {
-        if(rect.contains(event->pos()))
-        {
-            rubberBandShown = true;
-            rubberBandRect.setTopLeft(event->pos());
-            rubberBandRect.setBottomRight(event->pos());
-            updateRubberBandRegion();
-            setCursor(Qt::CrossCursor);
-        }
-    }
-}
-
-void Plotter::mouseMoveEvent(QMouseEvent *event)
-{
-    if(rubberBandShown)
-    {
-        updateRubberBandRegion();
-        rubberBandRect.setBottomRight(event->pos());
-        updateRubberBandRegion();
-    }
-}
-
-void Plotter::mouseReleaseEvent(QMouseEvent *event)
-{
-    if(event->button() == Qt::LeftButton && rubberBandShown)
-    {
-        rubberBandShown = false ;
-        updateRubberBandRegion();
-        unsetCursor();
-
-        QRect rect = rubberBandRect.normalized();
-        if ( rect.width() < 4 && rect.height() < 4)
-            return ;
-        rect.translate(-Margin,-Margin);
-        PlotSettings prevSetting = zoomStack[curZoom];
-
-        PlotSettings settings;
-
-        double dx = prevSetting.spanX() /(width() - 2 * Margin);
-        double dy = prevSetting.spanY() /(height() - 2 * Margin);
-
-        settings.minX = prevSetting.minX + dx * rect.left();
-        settings.maxX = prevSetting.minX + dx * rect.right();
-        settings.minY = prevSetting.maxY - dy * rect.bottom();
-        settings.maxY = prevSetting.maxY - dy * rect.top();
-
-        settings.adjust();
-
-        zoomStack.resize(curZoom+1);
-        zoomStack.append(settings);
-        zoomIn();
-    }
-}
-
-void Plotter::keyPressEvent(QKeyEvent *event)
-{
-    switch (event->key()) {
-    case Qt::Key_Plus:
-    zoomIn();
-    break;
-    case Qt::Key_Minus:
-    zoomOut();
-    break;
-    case Qt::Key_Left:
-    zoomStack[curZoom].scroll(-1, 0);
-    refreshPixmap();
-    break;
-    case Qt::Key_Right:
-    zoomStack[curZoom].scroll(+1, 0);
-    refreshPixmap();
-    break;
-    case Qt::Key_Down:
-    zoomStack[curZoom].scroll(0, -1);
-    refreshPixmap();
-    break;
-    case Qt::Key_Up:
-    zoomStack[curZoom].scroll(0, +1);
-    refreshPixmap();
-    break;
-    default:
-    QWidget::keyPressEvent(event);
-    }
-
-}
-
-void Plotter::wheelEvent(QWheelEvent *event)
-{
-    Q_UNUSED(event)
-}
-
-
-void Plotter::updateRubberBandRegion()
-{
-    QRect rect = rubberBandRect.normalized();
-    update(rect.left(), rect.top(), rect.width(), 1);
-    update(rect.left(), rect.top(), 1, rect.height());
-    update(rect.left(), rect.bottom(), rect.width(), 1);
-    update(rect.right(), rect.top(), 1, rect.height());
-
-}
-
-void Plotter::refreshPixmap()
-{
-    pixmap = QPixmap(size());
-    pixmap.fill(backgroundColor);
-
+    this->pixmap = QPixmap(this->size());
+    pixmap.fill(this->backgroundColor);
     QPainter painter(&pixmap);
-    drawGridAndText(painter);
-    drawCurves(painter);
-    update();
-
+    this->drawText(painter);
+    this->drawCurves(painter);
+    this->update();
 }
 
-void Plotter::drawGridAndText(QPainter& painter)
+void Plotter::paintEvent(QPaintEvent *)
 {
-    QRect rect(Margin,Margin,
-               width() - 2 * Margin , height() - 2 * Margin);
-    if(!rect.isValid())
-        return;
-    PlotSettings setting = zoomStack[curZoom];
-    painter.setPen(textColor);
-    for(int i = 0 ; i <= setting.numXTicks ;i++ )
+    QStylePainter painter(this);
+    painter.drawPixmap(0 , 0 ,this->pixmap);
+    this->refreshImage();
+}
+
+void Plotter::resizeEvent(QResizeEvent *)
+{
+}
+
+QRect Plotter::printRect()
+{
+    return QRect(Margin,Margin,this->width() - 2*Margin,this->height()- 2*Margin);
+}
+
+void Plotter::setCurveData(int id, QVector<double> *dataVector, QPen curvePen)
+{
+    this->colorMap[id] = curvePen;
+    this->curveDataMap[id] = dataVector;
+    this->refreshImage();
+}
+
+void Plotter::setSetting(int no_Curves, int no_Points, int MinY, int MaxY)
+{
+    this->noOfCurves = no_Curves;
+    this->noOfPoints = no_Points-1;
+    this->minY = MinY;
+    this->maxY = MaxY;
+}
+
+void Plotter::drawText(QPainter &painter)
+{
+    painter.setPen(QPen(textColor));
+    painter.drawRect(this->printRect().adjusted(0,0,-1,-1));
+    QRect rect = this->printRect();
+    double width = rect.width() - 1;
+    double stepX = 0;
+    double bottom = rect.bottom();
+    double label = 0;
+    painter.save();
+    painter.translate(Margin,bottom);
+    for(int i = 0 ; i <= numXTicks ;i++)
     {
-        int x = rect.left() + ((i * (rect.width()-1))/setting.numXTicks);
-        painter.drawLine(x,rect.bottom(),x , rect.bottom() + 5);
-        double label = setting.minX + ((i*setting.spanX()) /setting.numXTicks);
-        painter.save();
-        painter.translate( x - 10 ,rect.bottom() + 107);
-        painter.rotate(-90);
-        painter.drawText(0,0 , 100 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label,'f',2));
-        painter.restore();
-
-        if(showGrid)
-        {
-            float miniStep = ((rect.width() -1.0)/(setting.numXTicks*10.0));
-            painter.save();
-            painter.setPen(gridColor);
-            float offset;
-            for( int j= 0 ; j < 10 && i <setting.numXTicks ; j++)
-            {
-                offset = miniStep*j;
-                painter.drawLine(x + offset , rect.top() , x + offset , rect.bottom());
-            }
-            painter.restore();
-
-        }
+        label = (i*(noOfPoints + 1))/ numXTicks;
+        stepX =  (width * i) / numXTicks;
+        painter.drawLine(stepX ,0,stepX ,5);
+        painter.drawText(QRect(stepX - 50,5,100,20),Qt::AlignCenter,QString::number(label));
     }
+    painter.restore();
 
-    for(int i = 0 ; i <= setting.numYTicks ;i++ )
+    double height = rect.height() - 1;
+    double stepY = 0;
+    double left = rect.left();
+    painter.save();
+    painter.translate(left,rect.bottom());
+    for(int i = 0 ; i <= numYTicks ; i++)
     {
-        int y = rect.bottom() - ((i * (rect.height()-1))/setting.numYTicks);
-        painter.drawLine(rect.left(), y ,rect.left() - 5 , y);
-        double label = setting.minY + ((i*setting.spanY()) /setting.numYTicks);
-        painter.drawText(rect.left() - Margin ,y - 10 ,
-
-                         Margin-5 ,20 ,Qt::AlignRight|Qt::AlignVCenter,QString::number(label,'f',2));
-        if(showGrid)
-        {
-            float miniStep = ((rect.height() -1.0)/(setting.numYTicks*10.0));
-            float offset;
-            painter.save();
-            painter.setPen(gridColor);
-            for( int j= 0 ; j < 10 && i <setting.numYTicks ; j++)
-            {
-                offset = miniStep*j;
-                painter.drawLine( rect.left() ,y - offset ,  rect.right() ,y - offset );
-            }
-            painter.restore();
-        }
-
+        label = minY + (i * numYTicks*maxY)/(maxY - minY);
+        stepY = - (height * i) / numYTicks;
+        painter.drawLine(0 , stepY ,0 - 5, stepY);
+        painter.drawText(QRect(-105,stepY-10,100,20),Qt::AlignRight|Qt::AlignVCenter,QString::number(label));
     }
-    if(showText)
-    {
-        QFont textFont;
-        textFont.setBold(true);
-        textFont.setPixelSize(20);
-        painter.setFont(textFont);
-        painter.save();
-        painter.translate(rect.left() + rect.width()/2 , rect.bottom() + 50);
-        painter.drawText(-100,0,200,20,Qt::AlignHCenter,xAxisText);
-        painter.restore();
+    painter.restore();
 
-        painter.save();
-        painter.translate(rect.left() - 75,rect.bottom() -rect.height()/2);
-        painter.rotate(-90);
-        painter.drawText(-100,0,200,20,Qt::AlignHCenter,yAxisText);
-        painter.restore();
-    }
-
-    painter.drawRect(rect.adjusted( 0 , 0 , -1 , -1));
 }
 
 void Plotter::drawCurves(QPainter& painter)
 {
-    QRect rect(Margin,Margin,
-               width() - 2 * Margin , height() - 2 * Margin);
-    if(!rect.isValid())
-        return;
-    PlotSettings setting = zoomStack[curZoom];
-
-    /*
-     *otherwise paint will be on every part
-     */
-    painter.setClipRect(rect.adjusted( 1 , 1 , - 1 , -1 ));
-
-    QMapIterator<int , QVector<QPointF> > i(curveMap);
-    while(i.hasNext())
+    noOfCurves = curveDataMap.count();
+    QRect rect = this->printRect();
+    double x=0,y=0;
+    double width = rect.width() - 1;
+    double height = rect.height() - 1;
+    double yCount = maxY - minY;
+    if(antiAliasing)
+        painter.setRenderHints(QPainter::Antialiasing);
+    painter.translate(Margin + 1,rect.bottom()-1);
+    for(int i=0; i < noOfCurves ; i++)
     {
-        i.next();
-        int id = i.key();
-        QVector <QPointF> data = i.value();
-        int count = data.count();
-       // qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
         QPolygonF polyline;
-        for(int j = 0; j < count ;j++)
-            if((data[j].x()>= setting.minX -1) && (data[j].x() <= setting.maxX + 1))
-            {
-                double dx = data[j].x() - setting.minX;
-                double dy = data[j].y() - setting.minY;
-
-                double x = rect.left() + (dx * (rect.width()-1))/setting.spanX();
-                double y = rect.bottom() - (dy*(rect.height()-1))/setting.spanY();
-
-                polyline <<  QPointF(x,y);
-                //  qDebug() << QPointF(x,y);
-            }
-        if(antiAliasing)
-            painter.setRenderHint(QPainter::Antialiasing);
-        painter.setPen(penMap.value(id));
+        QVector<double>* dataPtr = curveDataMap[i] ;
+        for(int j = 0 ; j <= noOfPoints ; j++)
+        {
+            x = (width * j)/noOfPoints;
+            y = (height * dataPtr->value(j))/yCount;
+            polyline << QPoint(x,-y);
+            //qDebug() << y;
+        }
+        painter.setPen(colorMap.value(i));
         painter.drawPolyline(polyline);
+
     }
 }
 
-
-PlotSettings::PlotSettings()
+void Plotter::adjustTicks()
 {
-    minX =minY = 0.0;
-    maxX = maxY = 10.0;
-    numXTicks = numYTicks = 5;
+    if(!(noOfPoints % numXTicks))
+        numXTicks +=1;
+    if(!((maxY - minY) % numYTicks))
+        numYTicks += 1;
 }
 
-void PlotSettings::scroll(int dx, int dy)
+Plotter::~Plotter()
 {
-   double stepX = spanX() / numXTicks;
-   minX += stepX * dx;
-   maxX += stepX * dx;
-
-   double stepY = spanY()/ numYTicks;
-   minY += stepY * dy;
-   maxY += stepY * dy;
-
-}
-
-void PlotSettings::adjust()
-{
-    adjustAxis(minX,maxX,numXTicks);
-    adjustAxis(minY,maxY,numYTicks);
-}
-
-
-void PlotSettings::adjustAxis(double &min, double &max, int &numTicks)
-{
-    const int MinTicks = 4;
-    double grossStep = (max-min) / MinTicks;
-   // qDebug() <<std::floor(std::log10(grossStep));
-    double step =std::pow(10.0,std::floor(std::log10(grossStep)));
-    //qDebug() <<step;
-    if (5 * step < grossStep) {
-    step *= 5;
-    } else if (2 * step < grossStep) {
-    step *= 2;
-    }
-    numTicks = int(std::ceil(max / step) - std::floor(min / step));
-    if (numTicks < MinTicks)
-    numTicks = MinTicks;
-    min = std::floor(min / step) * step;
-    max = std::ceil(max / step) * step;
-
-
+    
 }

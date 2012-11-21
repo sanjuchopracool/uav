@@ -178,8 +178,8 @@ SerialApp::SerialApp(QWidget *parent)
     upperMainLayout->addLayout(upperleftVLayout);
     upperMainLayout->addLayout(textLayout);
 
-    plot = new Plotter;
     mainLayout = new QVBoxLayout;
+    plot = new Plotter();
     mainLayout->addLayout(upperMainLayout);
     mainLayout->addWidget(plot);
     this->setLayout(mainLayout);
@@ -190,7 +190,6 @@ SerialApp::SerialApp(QWidget *parent)
     //settingGroupBox->setDisabled(true);
 
     plot->hide();
-
     //connections
     connect(openButton,SIGNAL(clicked()),this,SLOT(open()));
     connect(closeButton,SIGNAL(clicked()),this,SLOT(close()));

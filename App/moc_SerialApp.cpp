@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'SerialApp.h'
 **
-** Created: Wed Nov 21 00:01:27 2012
+** Created: Wed Nov 21 23:52:13 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.3)
 **
 ** WARNING! All changes made in this file will be lost!

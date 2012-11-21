@@ -2,85 +2,70 @@
 #define PLOTTER_H
 
 #include <QWidget>
-#include <QMap>
-#include <QPen>
-#include <QVector>
+#include<QPainter>
 #include <QPixmap>
+#include <QMap>
+#include <QVector>
+#include <QColor>
 
-class QToolButton;
-class PlotSettings;
 class Plotter : public QWidget
 {
     Q_OBJECT
+    
 public:
     Plotter(QWidget *parent = 0);
-    void setPlotSettings(const PlotSettings & settings);
-    void setCurveData(int id , QVector<QPointF>& data, QPen pen);
-    void clearCurve(int id);
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+    void refreshImage();
+    void paintEvent(QPaintEvent *);
+    void resizeEvent(QResizeEvent *);
+    QRect printRect();
+    void setCurveData(int id , QVector<double>* dataVector, QPen curvePen);
+    void setSetting(int no_Curves , int no_Points , int MinY , int MaxY);
+    void drawText(QPainter& painter);
+    void drawCurves(QPainter& painter);
+    void adjustTicks();
+    QSize minimumSizeHint() const
+    {
+        return QSize(Margin*6,Margin*4);
+    }
 
-signals:
-protected:
-    void paintEvent(QPaintEvent* event);
-    void resizeEvent(QResizeEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent* event);
-    void keyPressEvent(QKeyEvent* event);
-    void wheelEvent(QWheelEvent* event);
-public slots:
-    void zoomIn();
-    void zoomOut();
-    void showGridSlot();
+    QSize sizeHint() const
+    {
+        return QSize(Margin*12 ,Margin*8);
+    }
+
+    void setNoOfTicks(int numX , int numY)
+    {
+        numXTicks = numX;
+        numYTicks = numY;
+        this->adjustTicks();
+    }
+
+    void setBackgroundColor(QColor color)
+    {
+        backgroundColor = color;
+    }
+    void setTextColor(QColor color)
+    {
+        textColor = color;
+    }
+
+    ~Plotter();
 
 private:
-    void updateRubberBandRegion();
-    void refreshPixmap();
-    void drawGridAndText(QPainter &painter);
-    void drawCurves(QPainter &painter);
-
-    enum {Margin = 50};
-    QToolButton* zoomInButton;
-    QToolButton* zoomOutButton;
-    QToolButton* showGridButton;
-
-    QPixmap pixmap;
-    bool rubberBandShown;
-    int curZoom;
-    QRect rubberBandRect;
-    QVector<PlotSettings> zoomStack;         //when user zoom PlotSetting will be saved on this
-    QMap<int,QVector <QPointF> > curveMap;  //map to store the curve's data there can be n no of curves
-    QColor backgroundColor;
-    QMap<int,QPen> penMap;
-    QColor textColor;
-    QColor gridColor;
-    bool showGrid;
-    bool antiAliasing;
-    QString xAxisText;
-    QString yAxisText;
-    bool showText;
-};
-class PlotSettings
-{
-public:
-    PlotSettings();
-
-    void scroll(int dx , int dy);
-    void adjust();
-    double spanX() const  { return maxX - minX; }
-    double spanY() const  { return maxY - minY; }
-
-    double minX;
-    double maxX;
+    enum { Margin = 50 };
+    int noOfCurves;
+    int noOfPoints;
+    int minY;
+    int maxY;
     int numXTicks;
-
-    double minY;
-    double maxY;
     int numYTicks;
+    bool antiAliasing;
 
-private:
-    static void adjustAxis(double &min, double& max,int& numTicks);
+    QColor backgroundColor;
+    QColor textColor;
+    QPixmap pixmap;
+    QMap <int ,QPen> colorMap;
+    QMap <int , QVector <double>* > curveDataMap;
 };
 
 #endif // PLOTTER_H
