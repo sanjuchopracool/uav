@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         SerialApp.cpp \
     serialport.cpp \
-    Plotter.cpp
+    Plotter.cpp \
+    SerialPlotter.cpp
 
 HEADERS  += SerialApp.h \
     serialport.h \
-    Plotter.h
+    Plotter.h \
+    SerialPlotter.h
 
 RESOURCES += \
     myres.qrc

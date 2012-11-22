@@ -22,5 +22,8 @@
         <file>images/zoom-out.png</file>
         <file>images/graph.png</file>
         <file>images/grid.png</file>
+        <file>images/fullscreen.png</file>
+        <file>images/maximize.png</file>
+        <file>images/minimize.png</file>
     </qresource>
 </RCC>

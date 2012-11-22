@@ -2,11 +2,12 @@
 #define PLOTTER_H
 
 #include <QWidget>
-#include<QPainter>
+#include <QPainter>
 #include <QPixmap>
 #include <QMap>
 #include <QVector>
 #include <QColor>
+#include <QToolButton>
 
 class Plotter : public QWidget
 {
@@ -23,6 +24,10 @@ public:
     void drawText(QPainter& painter);
     void drawCurves(QPainter& painter);
     void adjustTicks();
+    int heightForWidth(int width) const
+    {
+        return (width*3)/5;
+    }
     QSize minimumSizeHint() const
     {
         return QSize(Margin*6,Margin*4);
@@ -50,7 +55,11 @@ public:
     }
 
     ~Plotter();
+signals:
+    void maximizeButtonSignal();
 
+private slots:
+    void maximizeButtonSlot();
 private:
     enum { Margin = 50 };
     int noOfCurves;
@@ -66,6 +75,7 @@ private:
     QPixmap pixmap;
     QMap <int ,QPen> colorMap;
     QMap <int , QVector <double>* > curveDataMap;
+    QToolButton* maximizeButton;
 };
 
 #endif // PLOTTER_H

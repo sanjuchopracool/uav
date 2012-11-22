@@ -14,7 +14,6 @@
 #include <QVBoxLayout>
 #include <QPlainTextEdit>
 #include "serialport.h"
-#include "Plotter.h"
 #include <QSplitter>
 #include <QToolButton>
 
@@ -35,7 +34,10 @@ public slots:
     void refreshDevices();
     void save();
     void closeEvent(QCloseEvent *);
-    void gridButtonSlot();
+    void showPlotButtonSlot();
+
+signals:
+    void showPlotButtonSignal();
 private:
     QLabel* portLabel;
     QLabel* baudLabel;
@@ -70,11 +72,12 @@ private:
     QVBoxLayout* buttonLayout;
     QVBoxLayout* textLayout;
     QHBoxLayout* sendWidgetLayout;
-    QVBoxLayout* mainLayout;
-    QToolButton* gridButton;
+//    QVBoxLayout* mainLayout;
+    QToolButton* showPlotButton;
 
+public:
     SerialPort port;
-    Plotter* plot;
+//    Plotter* plot;
 };
 
 #endif // SERIALAPP_H

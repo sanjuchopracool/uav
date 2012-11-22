@@ -13,7 +13,15 @@ Plotter::Plotter(QWidget *parent)
     maxY = 100;
     this->numXTicks = 10;
     this->numYTicks = 10;
+    maximizeButton = new QToolButton(this);
+    maximizeButton->setCheckable(true);
+    maximizeButton->setIcon(QIcon(":images/maximize.png"));
+    maximizeButton->setToolTip("Maximize");
+    maximizeButton->setIconSize(QSize(35,35));
+    maximizeButton->adjustSize();
     antiAliasing = false;
+    connect(maximizeButton,SIGNAL(clicked()),this,SIGNAL(maximizeButtonSignal()));
+    connect(maximizeButton,SIGNAL(clicked()),this,SLOT(maximizeButtonSlot()));
 }
 
 void Plotter::refreshImage()
@@ -35,6 +43,7 @@ void Plotter::paintEvent(QPaintEvent *)
 
 void Plotter::resizeEvent(QResizeEvent *)
 {
+    maximizeButton->move(this->rect().right() -45, 5);
 }
 
 QRect Plotter::printRect()
@@ -132,4 +141,19 @@ void Plotter::adjustTicks()
 Plotter::~Plotter()
 {
     
+}
+
+
+void Plotter::maximizeButtonSlot()
+{
+    if(!maximizeButton->isChecked())
+    {
+        maximizeButton->setToolTip("Maximize");
+        maximizeButton->setIcon(QIcon(":images/maximize.png"));
+    }
+    else
+    {
+        maximizeButton->setToolTip("Minimize");
+        maximizeButton->setIcon(QIcon(":images/minimize.png"));
+    }
 }

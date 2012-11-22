@@ -50,7 +50,6 @@ void SerialApp::save()
 SerialApp::SerialApp(QWidget *parent)
     : QWidget(parent)
 {
-    plot = 0;
     portLabel = new QLabel("Select Port");
     baudLabel = new QLabel("Baud Rate");
     dataBitLabel = new QLabel("Data Bits");
@@ -137,12 +136,12 @@ SerialApp::SerialApp(QWidget *parent)
     clearButton = new QPushButton("Clear");
     saveButton = new QPushButton("Save");
     refreshButton = new QPushButton("Refresh list");
-    gridButton = new QToolButton;
-    gridButton->setToolTip("Show Plot");
-    gridButton->setIconSize(QSize(75,50));
-    gridButton->setCheckable(true);
-    gridButton->setIcon(QIcon(":/images/graph.png"));
-    gridButton->adjustSize();
+    showPlotButton = new QToolButton;
+    showPlotButton->setToolTip("Show Plot");
+    showPlotButton->setIconSize(QSize(75,50));
+    showPlotButton->setCheckable(true);
+    showPlotButton->setIcon(QIcon(":/images/graph.png"));
+    showPlotButton->adjustSize();
 
     buttonLayout = new QVBoxLayout;
     buttonLayout->addSpacing(25);
@@ -150,7 +149,7 @@ SerialApp::SerialApp(QWidget *parent)
     buttonLayout->addWidget(openButton);
     buttonLayout->addWidget(closeButton);
     buttonLayout->addStretch();
-    buttonLayout->addWidget(gridButton);
+    buttonLayout->addWidget(showPlotButton);
     buttonLayout->addStretch();
     buttonLayout->addWidget(clearButton);
     buttonLayout->addWidget(saveButton);
@@ -178,18 +177,13 @@ SerialApp::SerialApp(QWidget *parent)
     upperMainLayout->addLayout(upperleftVLayout);
     upperMainLayout->addLayout(textLayout);
 
-    mainLayout = new QVBoxLayout;
-    plot = new Plotter();
-    mainLayout->addLayout(upperMainLayout);
-    mainLayout->addWidget(plot);
-    this->setLayout(mainLayout);
+    this->setLayout(upperMainLayout);
 
     this->closeButton->setDisabled(true);
     this->sendButton->setDisabled(true);
     this->sendEdit->setDisabled(true);
     //settingGroupBox->setDisabled(true);
-
-    plot->hide();
+   // plot->hide();
     //connections
     connect(openButton,SIGNAL(clicked()),this,SLOT(open()));
     connect(closeButton,SIGNAL(clicked()),this,SLOT(close()));
@@ -198,7 +192,7 @@ SerialApp::SerialApp(QWidget *parent)
     connect(sendEdit,SIGNAL(returnPressed()),this,SLOT(send()));
     connect(refreshButton,SIGNAL(clicked()),this,SLOT(refreshDevices()));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(save()));
-    connect(this->gridButton,SIGNAL(clicked()),this,SLOT(gridButtonSlot()));
+    connect(this->showPlotButton,SIGNAL(clicked()),this,SLOT(showPlotButtonSlot()));
 
 }
 
@@ -206,6 +200,20 @@ SerialApp::~SerialApp()
 {
     
 }
+
+//void SerialApp::hideControls()
+//{
+//    settingGroupBox->hide();
+//    refreshButton->hide();
+//    openButton->hide();
+//    gridButton->hide();
+//    closeButton->hide();
+//    clearButton->hide();
+//    saveButton->hide();
+//    textEdit->hide();
+//    sendButton->hide();
+//    sendEdit->hide();
+//}
 
 void SerialApp::open()
 {
@@ -313,16 +321,17 @@ void SerialApp::closeEvent(QCloseEvent *)
 
 }
 
-void SerialApp::gridButtonSlot()
+void SerialApp::showPlotButtonSlot()
 {
-    if(!gridButton->isChecked())
+    if(!showPlotButton->isChecked())
     {
-        gridButton->setToolTip("Show Plot");
-        this->plot->hide();
+        showPlotButton->setToolTip("Show Plot");
+       // this->plot->hide();
     }
     else
     {
-        this->gridButton->setToolTip("Hide Plot");
-        this->plot->show();
+        this->showPlotButton->setToolTip("Hide Plot");
+      //  this->plot->show();
     }
+    emit showPlotButtonSignal();
 }
