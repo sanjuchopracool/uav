@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'serialport.h'
 **
-** Created: Fri Nov 23 21:58:21 2012
+** Created: Sat Nov 24 01:05:27 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.3)
 **
 ** WARNING! All changes made in this file will be lost!

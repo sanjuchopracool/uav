@@ -33,7 +33,6 @@ public slots:
     void clear() {this->textEdit->clear();}
     void refreshDevices();
     void save();
-    void closeEvent(QCloseEvent *);
     void showPlotButtonSlot();
 
 signals:

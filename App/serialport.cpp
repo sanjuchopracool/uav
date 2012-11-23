@@ -43,6 +43,7 @@ bool SerialPort::openDevice()
 {
     bool ret = false;
     mutex.lock();
+    openFlags |= O_NONBLOCK | O_NOCTTY ;
     ttyFd = open(&deviceName[0],openFlags);
     if(ttyFd == -1)
     {
@@ -367,6 +368,7 @@ void SerialPort::slotReceived(QByteArray array)
 SerialPort::~SerialPort()
 {
     this->stopThread = true;
+    this->wait();
     this->terminate();
     this->wait();
     this->closeDevice();

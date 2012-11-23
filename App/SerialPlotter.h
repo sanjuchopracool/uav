@@ -10,14 +10,15 @@
 #include <QDoubleValidator>
 #include <QGroupBox>
 #include <QPushButton>
-
+static int signalCount = 0;
 class SerialPlotter : public QWidget
 {
     Q_OBJECT
 public:
     explicit SerialPlotter(QWidget *parent = 0);
-    void closeEvent(QCloseEvent *);
     void disconnectSignals();
+    void resizeCurveVector();
+    ~SerialPlotter();
     
 signals:
     
@@ -29,6 +30,7 @@ public slots:
     void detectNoOfCurves(int num);
     void timeout();
     void closePortSlot();
+    void stopButtonSlot();
 private:
     SerialApp *app;
     Plotter*plot;
@@ -39,14 +41,14 @@ private:
     QLineEdit* minYEdit;
     QLabel* maxYLabel;
     QLineEdit* maxYEdit;
-    QLabel* noOfCurvesLabel;
-    QLineEdit* noOfCurvesEdit;
     QHBoxLayout* plotSettingLayout;
     QGroupBox* plotSettingGroupBox;
     QPushButton* startPlotButton;
+    QPushButton* stopButton;
 
     QVector< QVector <double> > curveData;
     int noOfCurves;
+    int noOfPoints;
     QTimer *timer;
 };
 

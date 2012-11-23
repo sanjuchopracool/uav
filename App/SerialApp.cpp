@@ -198,7 +198,6 @@ SerialApp::SerialApp(QWidget *parent)
 
 SerialApp::~SerialApp()
 {
-    
 }
 
 //void SerialApp::hideControls()
@@ -317,12 +316,6 @@ void SerialApp::dataReceived(QByteArray array)
     textEdit -> moveCursor (QTextCursor::End) ;
 }
 
-void SerialApp::closeEvent(QCloseEvent *)
-{
-    port.closeDevice();
-    port.~SerialPort();
-
-}
 
 void SerialApp::showPlotButtonSlot()
 {
