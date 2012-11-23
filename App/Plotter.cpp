@@ -68,6 +68,8 @@ void Plotter::setSetting(int no_Curves, int no_Points, int MinY, int MaxY)
 
 void Plotter::drawText(QPainter &painter)
 {
+//    qDebug() << "maxY is " << maxY;
+//    qDebug() << "minY is " << minY;
     painter.setPen(QPen(textColor));
     painter.drawRect(this->printRect().adjusted(0,0,-1,-1));
     QRect rect = this->printRect();
@@ -93,7 +95,7 @@ void Plotter::drawText(QPainter &painter)
     painter.translate(left,rect.bottom());
     for(int i = 0 ; i <= numYTicks ; i++)
     {
-        label = minY + (i * numYTicks*maxY)/(maxY - minY);
+        label = minY + (i * (maxY - minY))/numYTicks;
         stepY = - (height * i) / numYTicks;
         painter.drawLine(0 , stepY ,0 - 5, stepY);
         painter.drawText(QRect(-105,stepY-10,100,20),Qt::AlignRight|Qt::AlignVCenter,QString::number(label));

@@ -280,8 +280,9 @@ void SerialApp::open()
     refreshButton->setEnabled(false);
 
     connect(&port,SIGNAL(signalReceied(QByteArray)),this,SLOT(dataReceived(QByteArray)));
+    connect(&port,SIGNAL(lineReceived(int)),this,SIGNAL(lineReceivedApp(int)));
     port.start();
-
+    port.setPriority(QThread::LowestPriority);
     sendEdit->setFocus();
 
 }
@@ -289,7 +290,9 @@ void SerialApp::open()
 void SerialApp::close()
 {
     disconnect(&port,SIGNAL(signalReceied(QByteArray)),this,SLOT(dataReceived(QByteArray)));
+    disconnect(this->showPlotButton,SIGNAL(clicked()),this,SIGNAL(lineReceivedApp(int)));
     this->port.closeDevice();
+    emit closePortSignal();
     this->closeButton->setDisabled(true);
     this->sendButton->setDisabled(true);
     this->sendEdit->setDisabled(true);

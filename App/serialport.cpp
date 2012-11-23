@@ -306,7 +306,7 @@ void SerialPort::run()
 {
     char buffer[4096] ,*charPtr;
     QByteArray array;
-    int num = 0, numSent=0;
+    int num = 0, numSent=0,noToSent=0;
     while(!stopThread)
     {
         if(readFlag)
@@ -328,6 +328,10 @@ void SerialPort::run()
             }
             mutex.unlock();
         }
+
+        noToSent = array.indexOf('\n');
+        if(noToSent != -1)
+            emit lineReceived(noToSent);
 
         /*
          *writing to port

@@ -38,6 +38,8 @@ public slots:
 
 signals:
     void showPlotButtonSignal();
+    void lineReceivedApp(int);
+    void closePortSignal();
 private:
     QLabel* portLabel;
     QLabel* baudLabel;

@@ -108,6 +108,7 @@ protected:
 
 signals:
     void signalReceied(QByteArray);
+    void lineReceived(int);
 public slots:
     void slotReceived(QByteArray);
 

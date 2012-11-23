@@ -25,5 +25,6 @@
         <file>images/fullscreen.png</file>
         <file>images/maximize.png</file>
         <file>images/minimize.png</file>
+        <file>images/plotgroup.png</file>
     </qresource>
 </RCC>

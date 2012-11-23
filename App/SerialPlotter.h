@@ -16,12 +16,19 @@ class SerialPlotter : public QWidget
     Q_OBJECT
 public:
     explicit SerialPlotter(QWidget *parent = 0);
+    void closeEvent(QCloseEvent *);
+    void disconnectSignals();
     
 signals:
     
 public slots:
     void showPlotButtonSlot();
     void maximizeButtonSlot();
+    void startPlotButtonSlot();
+    void lineReceived(int num);
+    void detectNoOfCurves(int num);
+    void timeout();
+    void closePortSlot();
 private:
     SerialApp *app;
     Plotter*plot;
@@ -37,7 +44,10 @@ private:
     QHBoxLayout* plotSettingLayout;
     QGroupBox* plotSettingGroupBox;
     QPushButton* startPlotButton;
-    
+
+    QVector< QVector <double> > curveData;
+    int noOfCurves;
+    QTimer *timer;
 };
 
 #endif // SERIALPLOTTER_H

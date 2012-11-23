@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'serialport.h'
 **
-** Created: Thu Nov 22 23:51:22 2012
+** Created: Fri Nov 23 21:58:21 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,25 +23,26 @@ static const uint qt_meta_data_SerialPort[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x05,
+      38,   11,   11,   11, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      38,   11,   11,   11, 0x0a,
+      56,   11,   11,   11, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_SerialPort[] = {
     "SerialPort\0\0signalReceied(QByteArray)\0"
-    "slotReceived(QByteArray)\0"
+    "lineReceived(int)\0slotReceived(QByteArray)\0"
 };
 
 void SerialPort::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -51,7 +52,8 @@ void SerialPort::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         SerialPort *_t = static_cast<SerialPort *>(_o);
         switch (_id) {
         case 0: _t->signalReceied((*reinterpret_cast< QByteArray(*)>(_a[1]))); break;
-        case 1: _t->slotReceived((*reinterpret_cast< QByteArray(*)>(_a[1]))); break;
+        case 1: _t->lineReceived((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->slotReceived((*reinterpret_cast< QByteArray(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -89,9 +91,9 @@ int SerialPort::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }
@@ -101,5 +103,12 @@ void SerialPort::signalReceied(QByteArray _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void SerialPort::lineReceived(int _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_END_MOC_NAMESPACE
