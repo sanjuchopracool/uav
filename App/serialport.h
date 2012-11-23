@@ -96,7 +96,7 @@ public:
     QByteArray  readBytes(int len);
     void showData() {debug = true;  }
     void hideData() {debug = false; }
-    void stopDevice() {stopThread = false;}
+    void stopDevice() {stopThread = false; this->wait();}
     int BytesAvailable() const
     {
         return this->ReceiveBuff.size();
