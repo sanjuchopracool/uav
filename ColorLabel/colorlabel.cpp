@@ -1,0 +1,30 @@
+#include "colorlabel.h"
+#include <QPainter>
+#include <QColorDialog>
+#include <QMouseEvent>
+
+ColorLabel::ColorLabel(QColor color, QWidget *parent) :
+    QLabel(parent)
+{
+    this->setFixedSize(30,30);
+    this->m_Color = color;
+}
+
+void ColorLabel::paintEvent(QPaintEvent *)
+{
+    painter = new QPainter(this);
+    painter->setPen(QPen(Qt::white));
+    painter->setBrush(m_Color);
+    painter->drawRect(this->rect());
+    delete painter;
+}
+
+void ColorLabel::mousePressEvent(QMouseEvent *ev)
+{
+    if(ev->button() == Qt::LeftButton)
+    {
+        QColor color = QColorDialog::getColor(m_Color,this);
+        this->setColor(color);
+    }
+
+}

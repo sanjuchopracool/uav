@@ -7,7 +7,7 @@ SerialPlotter::SerialPlotter(QWidget *parent) :
 {
     noOfCurves = 0;
     timer =new QTimer;
-    timer->setInterval(50);
+    timer->setInterval(25);
     mainlayout = new QVBoxLayout;
     this->plot = new Plotter;
     plot->setMinimumHeight(300);
@@ -157,6 +157,8 @@ void SerialPlotter::timeout()
 void SerialPlotter::closePortSlot()
 {
     this->disconnectSignals();
+    this->startPlotButton->setEnabled(true);
+    stopButton->setEnabled(false);
 }
 
 void SerialPlotter::stopButtonSlot()
@@ -185,7 +187,7 @@ void SerialPlotter::resizeCurveVector()
 
     for(int i = 0 ; i < noOfCurves ; i++)
     {
-        plot->setCurveData(i,&curveData[i],QPen(Qt::blue));
+        plot->setCurveData(i,&curveData[i]);
     }
 }
 

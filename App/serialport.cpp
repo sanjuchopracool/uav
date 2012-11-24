@@ -42,7 +42,6 @@ SerialPort::SerialPort(QObject *parent) :
 bool SerialPort::openDevice()
 {
     bool ret = false;
-    mutex.lock();
     openFlags |= O_NONBLOCK | O_NOCTTY ;
     ttyFd = open(&deviceName[0],openFlags);
     if(ttyFd == -1)
@@ -59,7 +58,6 @@ bool SerialPort::openDevice()
 
 
     fcntl(ttyFd,F_SETFL,O_NONBLOCK);
-    mutex.unlock();
     ret = applySetting();
     if(ret)
     {

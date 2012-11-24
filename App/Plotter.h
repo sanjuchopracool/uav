@@ -8,6 +8,10 @@
 #include <QVector>
 #include <QColor>
 #include <QToolButton>
+#include "colorwidget.h"
+#include <QDomDocument>
+#include <QDomElement>
+#include <QFile>
 
 class Plotter : public QWidget
 {
@@ -19,11 +23,12 @@ public:
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
     QRect printRect();
-    void setCurveData(int id , QVector<double>* dataVector, QPen curvePen);
+    void setCurveData(int id , QVector<double>* dataVector);
     void setSetting(int no_Curves , int no_Points , int MinY , int MaxY);
     void drawText(QPainter& painter);
     void drawCurves(QPainter& painter);
     void adjustTicks();
+
     int heightForWidth(int width) const
     {
         return (width*3)/5;
@@ -54,12 +59,21 @@ public:
         textColor = color;
     }
 
+    void addColortoMap(QColor color)
+    {
+        colorMap[colorMap.count()] = color;
+    }
+
     ~Plotter();
 signals:
     void maximizeButtonSignal();
 
 private slots:
     void maximizeButtonSlot();
+    void changePlotSettingSlot();
+    void applyColorSetting(QColor back, QColor text, QVector <QColor> vect);
+    void saveSettings();
+    void loadSettings();
 private:
     enum { Margin = 50 };
     int noOfCurves;
@@ -73,9 +87,10 @@ private:
     QColor backgroundColor;
     QColor textColor;
     QPixmap pixmap;
-    QMap <int ,QPen> colorMap;
+    QMap <int ,QColor> colorMap;
     QMap <int , QVector <double>* > curveDataMap;
     QToolButton* maximizeButton;
+    QToolButton* curvePenButton;
 };
 
 #endif // PLOTTER_H
