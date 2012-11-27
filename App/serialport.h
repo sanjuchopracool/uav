@@ -101,6 +101,7 @@ public:
     {
         return this->ReceiveBuff.size();
     }
+    void startThread() {stopThread =false;}
 
 
 protected:

@@ -1,0 +1,54 @@
+QWidget
+{
+    font-family : Lucida Grande;
+    background-color:#858685;
+}
+QGroupBox
+{
+    color : black;
+    border-image :url(:/images/groupbox.png) 30;
+    border-width: 10px;
+}
+QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    background-color :transparent;
+}
+QLabel
+{
+    background-color:transparent;
+}
+
+QPushButton
+{
+    color : black;
+    border-image :url(:/images/normal.png) 9;
+    border-width: 9px;
+    padding: -10px 0px;
+    min-height: 25px;
+    min-width: 50px;
+    background-color :transparent;
+}
+
+QPushButton:disabled
+{
+    border-image: url(:/images/disabled.png) 9;
+}
+
+QPushButton:focus
+{
+    border-image: url(:/images/hover.png) 9;
+}
+QComboBox:!focus:hover,
+QPushButton:!focus:hover
+{
+    border-image: url(:/images/focus.png) 9;
+}
+QPushButton:pressed,
+QComboBox:on
+{
+    border-image: url(:/images/pressed.png) 9;
+    padding-top : -14;
+    padding-bottom : -16
+}

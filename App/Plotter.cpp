@@ -125,6 +125,7 @@ void Plotter::drawCurves(QPainter& painter)
     double yCount = maxY - minY;
     if(antiAliasing)
         painter.setRenderHints(QPainter::Antialiasing);
+    painter.setClipRegion(rect);
     painter.translate(Margin + 1,rect.bottom()-1);
     for(int i=0; i < noOfCurves ; i++)
     {
@@ -133,7 +134,7 @@ void Plotter::drawCurves(QPainter& painter)
         for(int j = 0 ; j <= noOfPoints ; j++)
         {
             x = (width * j)/noOfPoints;
-            y = (height * dataPtr->value(j))/yCount;
+            y = (height * (dataPtr->value(j) -minY))/yCount;
             polyline << QPoint(x,-y);
             //qDebug() << y;
         }
@@ -234,6 +235,9 @@ void Plotter::loadSettings()
     if( !file.open( QIODevice::ReadOnly | QIODevice::Text ) )
     {
         qDebug( "Failed to open file for reading." );
+        for(int i=0;i <12 ;i++)
+            colorMap[i] = QColor(qrand()%255,qrand()%255,qrand()%255);
+        this->saveSettings();
         return ;
     }
     if( !document.setContent( &file ) )
@@ -242,6 +246,7 @@ void Plotter::loadSettings()
         file.close();
         return;
     }
+    file.close();
     QDomElement documentElement= document.documentElement();
     QDomNode node = documentElement.firstChild();
     QDomElement element = node.toElement();

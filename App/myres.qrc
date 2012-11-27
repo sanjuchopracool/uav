@@ -27,5 +27,6 @@
         <file>images/minimize.png</file>
         <file>images/plotgroup.png</file>
         <file>images/style.png</file>
+        <file>colorChooser.css</file>
     </qresource>
 </RCC>

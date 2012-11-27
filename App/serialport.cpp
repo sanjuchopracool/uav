@@ -7,7 +7,7 @@ void printError(const SerialPort* port)
 SerialPort::SerialPort(QObject *parent) :
     QThread(parent)
 {
-    stopThread = false;
+    stopThread = true;
     debug = false;
     readFlag = true;
     writeFlag = true;

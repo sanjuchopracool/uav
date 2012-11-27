@@ -50,6 +50,8 @@ private:
     int noOfCurves;
     int noOfPoints;
     QTimer *timer;
+    QIntValidator *intValidator;
+    QDoubleValidator* doubleValidator;
 };
 
 #endif // SERIALPLOTTER_H

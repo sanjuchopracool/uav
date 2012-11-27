@@ -16,10 +16,10 @@ SerialPlotter::SerialPlotter(QWidget *parent) :
     noOfPointsEdit = new QLineEdit;
     noOfPointsLabel=new QLabel("No. of Points");
     noOfPointsEdit->setText("100");
-    QIntValidator *intValidator = new QIntValidator;
+    intValidator = new QIntValidator;
     noOfPointsEdit->setValidator(intValidator);
 
-    QDoubleValidator* doubleValidator = new QDoubleValidator;
+    doubleValidator = new QDoubleValidator;
     minYLabel = new QLabel("Min Y");
     minYEdit = new QLineEdit("0");
     minYEdit->setValidator(doubleValidator);
@@ -53,8 +53,8 @@ SerialPlotter::SerialPlotter(QWidget *parent) :
     mainlayout->addWidget(plot);
     this->setLayout(mainlayout);
 
-   // plot->hide();
-   // plotSettingGroupBox->hide();
+    plot->hide();
+    plotSettingGroupBox->hide();
 
     connect(app,SIGNAL(showPlotButtonSignal()),this,SLOT(showPlotButtonSlot()));
     connect(plot,SIGNAL(maximizeButtonSignal()),this,SLOT(maximizeButtonSlot()));
@@ -133,6 +133,12 @@ void SerialPlotter::detectNoOfCurves(int num)
             dataStream >> data >> ch;
             if(ch == '\n')
                 break;
+            if( i == 20)
+            {
+                noOfCurves = 0;
+                disconnect(app,SIGNAL(lineReceivedApp(int)),this,SLOT(detectNoOfCurves(int)));
+                return;
+            }
         }
     }
 

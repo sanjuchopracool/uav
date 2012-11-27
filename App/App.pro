@@ -8,9 +8,12 @@ QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = App
+TARGET = UARTPlotter
 TEMPLATE = app
-
+DESTDIR = bin
+OBJECTS_DIR = obj
+UI_DIR = ui
+MOC_DIR = moc
 
 SOURCES += main.cpp\
         SerialApp.cpp \
@@ -33,7 +36,8 @@ RESOURCES += \
 OTHER_FILES += \
     candy.qss \
     images/zoom-out.png \
-    images/zoom-in.png
+    images/zoom-in.png \
+    colorChooser.css
 
 FORMS += \
     colorwidget.ui

@@ -1,7 +1,7 @@
 #include "colorwidget.h"
 #include "ui_colorwidget.h"
 #include <QDebug>
-
+#include <QFile>
 ColorWidget::ColorWidget(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::ColorWidget)
@@ -22,12 +22,19 @@ ColorWidget::ColorWidget(QDialog *parent) :
         }
         this->ui->groupBox->setLayout(layout);
     }
+    QFile style(":colorChooser.css");
+    if(style.open(QIODevice::ReadOnly))
+        qDebug() << "unable to open colorChooser.css";
+    QString styleString = style.readAll();
+    this->setStyleSheet(styleString);
+    style.close();
     connect(ui->apply,SIGNAL(clicked()),this,SLOT(applyButtonSlot()));
 }
 
 ColorWidget::~ColorWidget()
 {
     delete ui;
+    delete ptrVector;
 }
 
 void ColorWidget::getColor(QColor back, QColor text ,QVector<QColor>* vect)
