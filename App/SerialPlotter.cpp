@@ -135,8 +135,10 @@ void SerialPlotter::detectNoOfCurves(int num)
                 break;
             if( i == 20)
             {
-                noOfCurves = 0;
+                qDebug() << "unable to detect no of curves";
+                noOfCurves = 1;
                 disconnect(app,SIGNAL(lineReceivedApp(int)),this,SLOT(detectNoOfCurves(int)));
+                connect(app,SIGNAL(lineReceivedApp(int)),this,SLOT(lineReceived(int)));
                 return;
             }
         }

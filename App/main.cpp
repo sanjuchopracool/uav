@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     style.close();
 //    w.plotter()->setCurveData(0,&dataVector1,QPen(Qt::red));
 //    w.plotter()->setCurveData(1,&dataVector2,QPen(Qt::blue));
-    w.setStyleSheet(styleString);
+//    w.setStyleSheet(styleString);
     w.show();
     w.setWhatsThis("Serial port Plot is used to get data from serial and plot curves");
     return a.exec();
