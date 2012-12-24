@@ -280,7 +280,7 @@ void SerialApp::open()
 
     connect(&port,SIGNAL(signalReceied(QByteArray)),this,SLOT(dataReceived(QByteArray)));
     connect(&port,SIGNAL(lineReceived(int)),this,SIGNAL(lineReceivedApp(int)));
-    port.start(QThread::LowPriority);
+    port.start();
     port.startThread();
     port.setPriority(QThread::LowestPriority);
     sendEdit->setFocus();
