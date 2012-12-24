@@ -15,18 +15,18 @@ SerialPlotter::SerialPlotter(QWidget *parent) :
 
     noOfPointsEdit = new QLineEdit;
     noOfPointsLabel=new QLabel("No. of Points");
-    noOfPointsEdit->setText("100");
+    noOfPointsEdit->setText("1000");
     intValidator = new QIntValidator;
     noOfPointsEdit->setValidator(intValidator);
 
     doubleValidator = new QDoubleValidator;
     minYLabel = new QLabel("Min Y");
-    minYEdit = new QLineEdit("0");
+    minYEdit = new QLineEdit("-300");
     minYEdit->setValidator(doubleValidator);
 
 
     maxYLabel = new QLabel("Max Y");
-    maxYEdit = new QLineEdit("100");
+    maxYEdit = new QLineEdit("300");
     maxYEdit->setValidator(doubleValidator);
 
 
@@ -107,20 +107,19 @@ void SerialPlotter::lineReceived(int num)
     {
         QByteArray temp = app->port.readBytes(num + 1);
         QTextStream dataStream(temp);
-        double data;
-        char ch;
         for(int i = 0 ; i < noOfCurves ; i++)
         {
             dataStream >> data >> ch;
             curveData[i].pop_front();
             curveData[i].append(data);
+            //qDebug() << data;
         }
     }
 }
 
 void SerialPlotter::detectNoOfCurves(int num)
 {
-    int i=0;
+    int i = 0;
     if(app->port.BytesAvailable() >= num+1)
     {
         signalCount++;
@@ -138,6 +137,7 @@ void SerialPlotter::detectNoOfCurves(int num)
                 qDebug() << "unable to detect no of curves";
                 noOfCurves = 1;
                 disconnect(app,SIGNAL(lineReceivedApp(int)),this,SLOT(detectNoOfCurves(int)));
+                this->resizeCurveVector();
                 connect(app,SIGNAL(lineReceivedApp(int)),this,SLOT(lineReceived(int)));
                 return;
             }

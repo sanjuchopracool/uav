@@ -328,7 +328,7 @@ void SerialPort::run()
             mutex.unlock();
         }
 
-        noToSent = array.indexOf('\n');
+        noToSent = ReceiveBuff.indexOf('\n');
         if(noToSent != -1)
             emit lineReceived(noToSent);
 

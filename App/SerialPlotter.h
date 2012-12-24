@@ -52,6 +52,10 @@ private:
     QTimer *timer;
     QIntValidator *intValidator;
     QDoubleValidator* doubleValidator;
+
+    //used for data extraction
+    double data;
+    char ch;
 };
 
 #endif // SERIALPLOTTER_H
