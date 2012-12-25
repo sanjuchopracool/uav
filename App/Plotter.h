@@ -23,11 +23,12 @@ public:
     void paintEvent(QPaintEvent *);
     void resizeEvent(QResizeEvent *);
     QRect printRect();
-    void setCurveData(int id , QVector<double>* dataVector);
+    void setCurveData(int id ,QList<double>* dataList);
     void setSetting(int no_Curves , int no_Points , int MinY , int MaxY);
     void drawText(QPainter& painter);
     void drawCurves(QPainter& painter);
     void adjustTicks();
+    void clearDataMap() {curveDataMap.clear();}
 
     int heightForWidth(int width) const
     {
@@ -88,7 +89,7 @@ private:
     QColor textColor;
     QPixmap pixmap;
     QMap <int ,QColor> colorMap;
-    QMap <int , QVector <double>* > curveDataMap;
+    QMap <int , QList <double>* > curveDataMap;
     QToolButton* maximizeButton;
     QToolButton* curvePenButton;
 };

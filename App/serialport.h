@@ -102,6 +102,7 @@ public:
         return this->ReceiveBuff.size();
     }
     void startThread() {stopThread =false;}
+    void clearReceiveBuff() {ReceiveBuff.clear();}
 
 
 protected:
@@ -110,6 +111,7 @@ protected:
 signals:
     void signalReceied(QByteArray);
     void lineReceived(int);
+    void lineReceived(QByteArray);
 public slots:
     void slotReceived(QByteArray);
 

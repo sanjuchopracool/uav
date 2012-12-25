@@ -24,6 +24,7 @@ class SerialApp : public QWidget
 public:
     SerialApp(QWidget *parent = 0);
     ~SerialApp();
+    SerialPort* instance()  { return &port;}
 
 public slots:
     void open();
@@ -34,10 +35,11 @@ public slots:
     void refreshDevices();
     void save();
     void showPlotButtonSlot();
+    void toogleVisibility();
 
 signals:
     void showPlotButtonSignal();
-    void lineReceivedApp(int);
+    void lineReceivedApp(QByteArray);
     void closePortSignal();
 private:
     QLabel* portLabel;
@@ -77,7 +79,7 @@ private:
     QToolButton* showPlotButton;
 
 public:
-    SerialPort port;
+    static SerialPort port;
 //    Plotter* plot;
 };
 

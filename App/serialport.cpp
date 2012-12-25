@@ -13,7 +13,7 @@ SerialPort::SerialPort(QObject *parent) :
     writeFlag = true;
     ttyFd = -1 ;   //by default fd should be -1
     deviceName = "/dev/ttyUSB0" ;               //default is ttyUSB0 my laptop does not have ttyso
-    openFlags = O_NONBLOCK | O_NOCTTY ;         //use non blocking (used for terminal , fifi ,sockets),and
+    openFlags = O_NONBLOCK | O_NOCTTY |O_TRUNC;         //use non blocking (used for terminal , fifi ,sockets),and
                                                 //no control terminal for process
 
     /*
@@ -329,8 +329,8 @@ void SerialPort::run()
         }
 
         noToSent = ReceiveBuff.indexOf('\n');
-        if(noToSent != -1)
-            emit lineReceived(noToSent);
+        if(noToSent != -1 && noToSent)
+            emit lineReceived(readBytes(noToSent+1));
 
         /*
          *writing to port

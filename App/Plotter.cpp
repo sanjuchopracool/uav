@@ -63,9 +63,9 @@ QRect Plotter::printRect()
     return QRect(Margin,Margin,this->width() - 2*Margin,this->height()- 2*Margin);
 }
 
-void Plotter::setCurveData(int id, QVector<double> *dataVector)
+void Plotter::setCurveData(int id, QList<double> *dataList)
 {
-    this->curveDataMap[id] = dataVector;
+    this->curveDataMap[id] = dataList;
     this->refreshImage();
 }
 
@@ -130,7 +130,7 @@ void Plotter::drawCurves(QPainter& painter)
     for(int i=0; i < noOfCurves ; i++)
     {
         QPolygonF polyline;
-        QVector<double>* dataPtr = curveDataMap[i] ;
+        QList<double>* dataPtr = curveDataMap[i] ;
         for(int j = 0 ; j <= noOfPoints ; j++)
         {
             x = (width * j)/noOfPoints;

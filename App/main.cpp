@@ -1,20 +1,24 @@
-#include "SerialPlotter.h"
 #include <QApplication>
-#include <QFile>
-#include <QDebug>
+#include "graphwidget.h"
+#include "SerialApp.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    SerialPlotter w;
-    QFile style(":/candy.qss");
-    if(!style.open(QIODevice::ReadOnly))
-        qDebug() << "Unable to open file";
-    QString styleString = style.readAll();
-    style.close();
-//    w.plotter()->setCurveData(0,&dataVector1,QPen(Qt::red));
-//    w.plotter()->setCurveData(1,&dataVector2,QPen(Qt::blue));
-//    w.setStyleSheet(styleString);
+    QWidget w;
+    QVBoxLayout layout;
+    GraphWidget graphWidget;
+    SerialApp serialWidget;
+    layout.addWidget(&serialWidget);
+    layout.addWidget(&graphWidget);
+    graphWidget.setVisible(false);
+
+    QObject::connect(&serialWidget,SIGNAL(showPlotButtonSignal()),&graphWidget,SLOT(toggleVisibility()));
+    QObject::connect(&graphWidget,SIGNAL(maximizeButtonSignal()),&serialWidget,SLOT(toogleVisibility()));
+    QObject::connect(&serialWidget,SIGNAL(lineReceivedApp(QByteArray)),
+                     &graphWidget,SLOT(lineReceiveSlot(QByteArray)));
+    QObject::connect(&serialWidget,SIGNAL(closePortSignal()),&graphWidget,SLOT(stopButtonSlot()));
+
+    w.setLayout(&layout);
     w.show();
-    w.setWhatsThis("Serial port Plot is used to get data from serial and plot curves");
     return a.exec();
 }

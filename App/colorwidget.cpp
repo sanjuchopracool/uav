@@ -23,12 +23,12 @@ ColorWidget::ColorWidget(QDialog *parent) :
         this->ui->groupBox->setLayout(layout);
     }
 
-    QFile style(":colorChooser.css");
-    if(style.open(QIODevice::ReadOnly))
-        qDebug() << "unable to open colorChooser.css";
-    QString styleString = style.readAll();
-    this->setStyleSheet(styleString);
-    style.close();
+//    QFile style(":colorChooser.css");
+//    if(style.open(QIODevice::ReadOnly))
+//        qDebug() << "unable to open colorChooser.css";
+//    QString styleString = style.readAll();
+//    this->setStyleSheet(styleString);
+//    style.close();
     this->setMinimumHeight(300);
     connect(ui->apply,SIGNAL(clicked()),this,SLOT(applyButtonSlot()));
 }

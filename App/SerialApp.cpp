@@ -9,6 +9,8 @@ Q_DECLARE_METATYPE(StopBitsType)
 Q_DECLARE_METATYPE(DataBitsType)
 Q_DECLARE_METATYPE(ParityType)
 
+SerialPort SerialApp::port(0);
+
 void SerialApp::refreshDevices()
 {
     QStringList deviceList;
@@ -277,9 +279,10 @@ void SerialApp::open()
     closeButton->setEnabled(true);
     openButton->setDisabled(true);
     refreshButton->setEnabled(false);
+    saveButton->setEnabled(false);
 
     connect(&port,SIGNAL(signalReceied(QByteArray)),this,SLOT(dataReceived(QByteArray)));
-    connect(&port,SIGNAL(lineReceived(int)),this,SIGNAL(lineReceivedApp(int)));
+    connect(&port,SIGNAL(lineReceived(QByteArray)),this,SIGNAL(lineReceivedApp(QByteArray)));
     port.start();
     port.startThread();
     port.setPriority(QThread::LowestPriority);
@@ -300,6 +303,7 @@ void SerialApp::close()
     closeButton->setEnabled(false);
     openButton->setDisabled(false);
     refreshButton->setEnabled(true);
+    saveButton->setEnabled(true);
 }
 
 void SerialApp::send()
@@ -331,4 +335,12 @@ void SerialApp::showPlotButtonSlot()
       //  this->plot->show();
     }
     emit showPlotButtonSignal();
+}
+
+void SerialApp::toogleVisibility()
+{
+    if(this->isVisible())
+        this->setVisible(false);
+    else
+        this->setVisible(true);
 }

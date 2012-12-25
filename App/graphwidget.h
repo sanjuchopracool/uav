@@ -1,38 +1,31 @@
-#ifndef SERIALPLOTTER_H
-#define SERIALPLOTTER_H
-#include "Plotter.h"
-#include "SerialApp.h"
+#ifndef GRAPHWIDGET_H
+#define GRAPHWIDGET_H
+
 #include <QWidget>
-#include <QLabel>
+#include "Plotter.h"
 #include <QLineEdit>
-#include <QHBoxLayout>
+#include <QPushButton>
+#include <QTimer>
 #include <QIntValidator>
 #include <QDoubleValidator>
 #include <QGroupBox>
-#include <QPushButton>
-static int signalCount = 0;
-class SerialPlotter : public QWidget
+
+class GraphWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SerialPlotter(QWidget *parent = 0);
-    void disconnectSignals();
-    void resizeCurveVector();
-    ~SerialPlotter();
+    explicit GraphWidget(QWidget *parent = 0);
     
 signals:
-    
+    void maximizeButtonSignal();
 public slots:
-    void showPlotButtonSlot();
-    void maximizeButtonSlot();
-    void startPlotButtonSlot();
-    void lineReceived(int num);
-    void detectNoOfCurves(int num);
-    void timeout();
-    void closePortSlot();
+    void toggleVisibility();
+    void startButtonSlot();
     void stopButtonSlot();
+    void resizeDataList();
+    void timeout();
+    void lineReceiveSlot(QByteArray);
 private:
-    SerialApp *app;
     Plotter*plot;
     QVBoxLayout* mainlayout;
     QLabel* noOfPointsLabel;
@@ -41,12 +34,14 @@ private:
     QLineEdit* minYEdit;
     QLabel* maxYLabel;
     QLineEdit* maxYEdit;
+    QLabel* noOfCurvesLabel;
+    QLineEdit* noOfCurvesEdit;
     QHBoxLayout* plotSettingLayout;
     QGroupBox* plotSettingGroupBox;
     QPushButton* startPlotButton;
     QPushButton* stopButton;
 
-    QVector< QVector <double> > curveData;
+    QList< QList <double> > curveData;
     int noOfCurves;
     int noOfPoints;
     QTimer *timer;
@@ -56,6 +51,8 @@ private:
     //used for data extraction
     double data;
     char ch;
+    bool plotCurve;
+    
 };
 
-#endif // SERIALPLOTTER_H
+#endif // GRAPHWIDGET_H
