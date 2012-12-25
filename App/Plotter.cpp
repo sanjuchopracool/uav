@@ -1,6 +1,7 @@
 #include "Plotter.h"
 #include <QStylePainter>
 #include <QDebug>
+#include <QFileDialog>
 
 Plotter::Plotter(QWidget *parent)
     : QWidget(parent)
@@ -27,10 +28,17 @@ Plotter::Plotter(QWidget *parent)
     curvePenButton->setIconSize(QSize(35,35));
     curvePenButton->adjustSize();
 
+    savePictureButton = new QToolButton(this);
+    savePictureButton->setIcon(QIcon(":images/image-x-generic.png"));
+    savePictureButton->setToolTip("Save as Image");
+    savePictureButton->setIconSize(QSize(35,35));
+    savePictureButton->adjustSize();
+
     antiAliasing = true;
     connect(maximizeButton,SIGNAL(clicked()),this,SIGNAL(maximizeButtonSignal()));
     connect(maximizeButton,SIGNAL(clicked()),this,SLOT(maximizeButtonSlot()));
     connect(curvePenButton,SIGNAL(clicked()),this,SLOT(changePlotSettingSlot()));
+    connect(savePictureButton,SIGNAL(clicked()),this,SLOT(saveAsImage()));
 
     this->loadSettings();
 }
@@ -56,6 +64,7 @@ void Plotter::resizeEvent(QResizeEvent *)
 {
     maximizeButton->move(this->rect().right() -45, 5);
     curvePenButton->move(this->rect().right() -95 , 5);
+    savePictureButton->move(this->rect().right() -145 , 5);
 }
 
 QRect Plotter::printRect()
@@ -263,4 +272,12 @@ void Plotter::loadSettings()
         node =node.nextSibling();
         i++;
     }
+}
+
+void Plotter::saveAsImage()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,"Save as Image",QDir::homePath(),"Image Files (*.png) ;");
+    if(fileName.isEmpty())
+        return;
+    this->pixmap.save(fileName);
 }

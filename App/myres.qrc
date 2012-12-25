@@ -28,5 +28,6 @@
         <file>images/plotgroup.png</file>
         <file>images/style.png</file>
         <file>colorChooser.css</file>
+        <file>images/image-x-generic.png</file>
     </qresource>
 </RCC>

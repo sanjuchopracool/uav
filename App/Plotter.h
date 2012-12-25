@@ -75,6 +75,7 @@ private slots:
     void applyColorSetting(QColor back, QColor text, QVector <QColor> vect);
     void saveSettings();
     void loadSettings();
+    void saveAsImage();
 private:
     enum { Margin = 50 };
     int noOfCurves;
@@ -92,6 +93,7 @@ private:
     QMap <int , QList <double>* > curveDataMap;
     QToolButton* maximizeButton;
     QToolButton* curvePenButton;
+    QToolButton* savePictureButton;
 };
 
 #endif // PLOTTER_H
