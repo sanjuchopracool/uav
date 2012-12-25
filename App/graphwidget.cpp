@@ -6,8 +6,6 @@ GraphWidget::GraphWidget(QWidget *parent) :
     QWidget(parent)
 {
     noOfCurves = 0;
-    timer =new QTimer;
-    timer->setInterval(25);
     mainlayout = new QVBoxLayout;
     this->plot = new Plotter;
     plot->setMinimumHeight(300);
@@ -82,7 +80,6 @@ void GraphWidget::startButtonSlot()
     if(noOfPoints < 0) noOfPoints = 0;
 
     resizeDataList();
-    connect(timer,SIGNAL(timeout()),this,SLOT(timeout()));
 
     noOfCurvesEdit->setEnabled(false);
     noOfPointsEdit->setEnabled(false);
@@ -91,13 +88,11 @@ void GraphWidget::startButtonSlot()
 
     startPlotButton->setEnabled(false);
     stopButton->setEnabled(true);
-    timer->start();
 }
 
 void GraphWidget::stopButtonSlot()
 {
     plotCurve = false;
-    disconnect(timer,SIGNAL(timeout()),this,SLOT(timeout()));
     noOfCurvesEdit->setEnabled(true);
     noOfPointsEdit->setEnabled(true);
     maxYEdit->setEnabled(true);
@@ -105,7 +100,6 @@ void GraphWidget::stopButtonSlot()
 
     startPlotButton->setEnabled(true);
     stopButton->setEnabled(false);
-    timer->stop();
 }
 
 void GraphWidget::resizeDataList()
@@ -123,17 +117,12 @@ void GraphWidget::resizeDataList()
     }
 
     plot->setSetting(noOfCurves,noOfPoints,minYEdit->text().toInt(),maxYEdit->text().toInt());
+    //qDebug() << noOfPoints;
 
     for(int i = 0 ; i < noOfCurves ; i++)
     {
         plot->setCurveData(i,&curveData[i]);
     }
-}
-
-
-void GraphWidget::timeout()
-{
-    this->update();
 }
 
 void GraphWidget::lineReceiveSlot(QByteArray dataBytes)

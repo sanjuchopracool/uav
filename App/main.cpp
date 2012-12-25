@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     QObject::connect(&serialWidget,SIGNAL(showPlotButtonSignal()),&graphWidget,SLOT(toggleVisibility()));
     QObject::connect(&graphWidget,SIGNAL(maximizeButtonSignal()),&serialWidget,SLOT(toogleVisibility()));
-    QObject::connect(&serialWidget,SIGNAL(lineReceivedApp(QByteArray)),
+    QObject::connect(&serialWidget.port,SIGNAL(lineReceived(QByteArray)),
                      &graphWidget,SLOT(lineReceiveSlot(QByteArray)));
     QObject::connect(&serialWidget,SIGNAL(closePortSignal()),&graphWidget,SLOT(stopButtonSlot()));
 

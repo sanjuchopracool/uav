@@ -293,7 +293,7 @@ void SerialApp::open()
 void SerialApp::close()
 {
     disconnect(&port,SIGNAL(signalReceied(QByteArray)),this,SLOT(dataReceived(QByteArray)));
-    disconnect(this->showPlotButton,SIGNAL(clicked()),this,SIGNAL(lineReceivedApp(int)));
+   // disconnect(this->showPlotButton,SIGNAL(clicked()),this,SIGNAL(lineReceivedApp(int)));
     this->port.closeDevice();
     emit closePortSignal();
     this->closeButton->setDisabled(true);

@@ -5,7 +5,6 @@
 #include "Plotter.h"
 #include <QLineEdit>
 #include <QPushButton>
-#include <QTimer>
 #include <QIntValidator>
 #include <QDoubleValidator>
 #include <QGroupBox>
@@ -23,7 +22,6 @@ public slots:
     void startButtonSlot();
     void stopButtonSlot();
     void resizeDataList();
-    void timeout();
     void lineReceiveSlot(QByteArray);
 private:
     Plotter*plot;
@@ -44,7 +42,6 @@ private:
     QList< QList <double> > curveData;
     int noOfCurves;
     int noOfPoints;
-    QTimer *timer;
     QIntValidator *intValidator;
     QDoubleValidator* doubleValidator;
 

@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2012-11-16T21:58:22
+# Project created by QtCreator 2012-12-25T03:11:08
 #
 #-------------------------------------------------
 
@@ -8,36 +8,36 @@ QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = UARTPlotter
+TARGET = App
+
 TEMPLATE = app
 DESTDIR = bin
 OBJECTS_DIR = obj
 UI_DIR = ui
 MOC_DIR = moc
 
-SOURCES += main.cpp\
-        SerialApp.cpp \
-    serialport.cpp \
+SOURCES += main.cpp \
     Plotter.cpp \
-    SerialPlotter.cpp \
+    colorwidget.cpp \
     colorlabel.cpp \
-    colorwidget.cpp
+    graphwidget.cpp \
+    SerialApp.cpp \
+    serialport.cpp
 
-HEADERS  += SerialApp.h \
-    serialport.h \
+HEADERS  += \
     Plotter.h \
-    SerialPlotter.h \
+    colorwidget.h \
     colorlabel.h \
-    colorwidget.h
-
-RESOURCES += \
-    myres.qrc
-
-OTHER_FILES += \
-    candy.qss \
-    images/zoom-out.png \
-    images/zoom-in.png \
-    colorChooser.css
+    graphwidget.h \
+    SerialApp.h \
+    serialport.h
 
 FORMS += \
     colorwidget.ui
+
+OTHER_FILES += \
+    colorChooser.css \
+    candy.qss
+
+RESOURCES += \
+    myres.qrc

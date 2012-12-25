@@ -42,7 +42,7 @@ SerialPort::SerialPort(QObject *parent) :
 bool SerialPort::openDevice()
 {
     bool ret = false;
-    openFlags |= O_NONBLOCK | O_NOCTTY ;
+    openFlags |= O_NONBLOCK | O_NOCTTY | O_TRUNC;
     ttyFd = open(&deviceName[0],openFlags);
     if(ttyFd == -1)
     {
@@ -57,7 +57,7 @@ bool SerialPort::openDevice()
 
 
 
-    fcntl(ttyFd,F_SETFL,O_NONBLOCK);
+    fcntl(ttyFd,F_SETFL,O_NONBLOCK | O_TRUNC);
     ret = applySetting();
     if(ret)
     {
@@ -330,7 +330,9 @@ void SerialPort::run()
 
         noToSent = ReceiveBuff.indexOf('\n');
         if(noToSent != -1 && noToSent)
-            emit lineReceived(readBytes(noToSent+1));
+        {
+            emit lineReceived(readBytes(noToSent + 1));
+        }
 
         /*
          *writing to port
