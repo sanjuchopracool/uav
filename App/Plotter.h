@@ -27,6 +27,7 @@ public:
     void setSetting(int no_Curves , int no_Points , int MinY , int MaxY);
     void drawText(QPainter& painter);
     void drawCurves(QPainter& painter);
+    void drawGrid(QPainter& painter);
     void adjustTicks();
     void clearDataMap() {curveDataMap.clear();}
 
@@ -72,10 +73,11 @@ signals:
 private slots:
     void maximizeButtonSlot();
     void changePlotSettingSlot();
-    void applyColorSetting(QColor back, QColor text, QVector <QColor> vect);
+    void applyColorSetting(QColor back, QColor text,QColor grid, QVector <QColor> vect);
     void saveSettings();
     void loadSettings();
     void saveAsImage();
+    void gridButtonSlot();
 private:
     enum { Margin = 50 };
     int noOfCurves;
@@ -85,15 +87,18 @@ private:
     int numXTicks;
     int numYTicks;
     bool antiAliasing;
+    bool showGrid;
 
     QColor backgroundColor;
     QColor textColor;
+    QColor gridColor;
     QPixmap pixmap;
     QMap <int ,QColor> colorMap;
     QMap <int , QList <double>* > curveDataMap;
     QToolButton* maximizeButton;
     QToolButton* curvePenButton;
     QToolButton* savePictureButton;
+    QToolButton* gridButton;
 };
 
 #endif // PLOTTER_H

@@ -39,47 +39,48 @@
     </layout>
    </item>
    <item row="0" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Text Color</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="ColorLabel" name="textLabel">
-         <property name="minimumSize">
-          <size>
-           <width>30</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Text Color</string>
+       </property>
+      </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
+      <widget class="ColorLabel" name="textLabel">
+       <property name="minimumSize">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>30</width>
+         <height>30</height>
         </size>
        </property>
-      </spacer>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
-   <item row="1" column="0" rowspan="2" colspan="3">
+   <item row="0" column="3">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Grid Color</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="ColorLabel" name="gridLabel">
+       <property name="text">
+        <string>gridLabel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0" rowspan="2" colspan="4">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Select Colors</string>

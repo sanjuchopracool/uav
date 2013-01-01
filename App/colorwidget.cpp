@@ -39,10 +39,11 @@ ColorWidget::~ColorWidget()
     delete ptrVector;
 }
 
-void ColorWidget::getColor(QColor back, QColor text ,QVector<QColor>* vect)
+void ColorWidget::getColor(QColor back, QColor text,QColor grid ,QVector<QColor>* vect)
 {
     this->ui->backLabel->setColor(back);
     this->ui->textLabel->setColor(text);
+    this->ui->gridLabel->setColor(grid);
     for(int k= 0 ; k <12 ; k++)
     {
         ptrVector->at(k)->setColor(vect->at(k));
@@ -56,5 +57,6 @@ void ColorWidget::applyButtonSlot()
     {
         colrVect.insert(i,ptrVector->at(i)->color());
     }
-    emit setColor(this->ui->backLabel->color(),this->ui->textLabel->color(),colrVect);
+    emit setColor(this->ui->backLabel->color(),this->ui->textLabel->color(),
+                  ui->gridLabel->color(),colrVect);
 }

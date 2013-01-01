@@ -18,5 +18,4 @@ SOURCES += main.cpp \
 HEADERS  += \
     Plotter.h
 
-RESOURCES += \
-    plotter.qrc
+RESOURCES +=

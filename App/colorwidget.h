@@ -16,12 +16,12 @@ class ColorWidget : public QDialog
 public:
     explicit ColorWidget(QDialog *parent = 0);
     ~ColorWidget();
-    void getColor(QColor back, QColor text, QVector<QColor> *vect);
+    void getColor(QColor back, QColor text,QColor grid, QVector<QColor> *vect);
 
 public slots:
     void applyButtonSlot();
 signals:
-    void setColor(QColor back,QColor text,QVector<QColor>);
+    void setColor(QColor back,QColor text,QColor grid,QVector<QColor>);
 private:
     Ui::ColorWidget *ui;
     QVector<QColor>* colorVector;
