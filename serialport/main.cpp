@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     Q_UNUSED(argc)
     Q_UNUSED(argv)
     SerialPort port;
-   // port.setDeviceName("/dev/ttyACM0");
+   //// port.setDeviceName("/dev/ttyACM0");
    // qDebug() <<port.getDeviceName();
     port.setReadWrite();
     port.setBaudRate(BAUD38400);
