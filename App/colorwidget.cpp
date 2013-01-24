@@ -2,7 +2,7 @@
 #include "ui_colorwidget.h"
 #include <QDebug>
 #include <QFile>
-ColorWidget::ColorWidget(QDialog *parent) :
+ColorWidget::ColorWidget(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ColorWidget)
 {

@@ -250,6 +250,8 @@ void SerialPort::setStopBits(StopBitsType stopBits)
 
 void SerialPort::setParity(ParityType parity)
 {
+    if(parity == NONE)
+        return;
     config.c_cflag |= PARENB ;  //enable parity by default even parity
     if(parity == ODD)
         config.c_cflag |= PARODD;

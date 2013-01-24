@@ -14,7 +14,7 @@ class ColorWidget : public QDialog
     Q_OBJECT
     
 public:
-    explicit ColorWidget(QDialog *parent = 0);
+    explicit ColorWidget(QWidget *parent = 0);
     ~ColorWidget();
     void getColor(QColor back, QColor text,QColor grid, QVector<QColor> *vect);
 

@@ -4,9 +4,11 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#ifdef Q_OS_UNIX
 Q_DECLARE_METATYPE(BaudRateType)
 Q_DECLARE_METATYPE(StopBitsType)
 Q_DECLARE_METATYPE(DataBitsType)
+#endif
 Q_DECLARE_METATYPE(ParityType)
 
 SerialPort SerialApp::port(0);
@@ -14,6 +16,7 @@ SerialPort SerialApp::port(0);
 void SerialApp::refreshDevices()
 {
     QStringList deviceList;
+#ifdef Q_OS__UNIX
     QDir dir("/dev/");
     QStringList filters;
     filters  << "ttyUSB*" << "ttyS*";
@@ -26,6 +29,10 @@ void SerialApp::refreshDevices()
         QFileInfo fileInfo = list.at(i);
         deviceList << fileInfo.fileName();
     }
+#else
+    deviceList << "COM1"  << "COM2" << "COM3" << "COM4"  << "COM5";
+#endif
+
     this->portBox->clear();
     this->portBox->addItems(deviceList);
 
@@ -66,6 +73,7 @@ SerialApp::SerialApp(QWidget *parent)
     portBox->setEditable(true);
     baudBox = new QComboBox;
 
+#ifdef Q_OS_UNIX
     baudBox->addItem("50",QVariant::fromValue(BAUD50));
     baudBox->addItem("75",QVariant::fromValue(BAUD75));
     baudBox->addItem("110",QVariant::fromValue(BAUD110));
@@ -97,19 +105,36 @@ SerialApp::SerialApp(QWidget *parent)
     baudBox->addItem("3500000",QVariant::fromValue(BAUD3500000));
     baudBox->addItem("4000000",QVariant::fromValue(BAUD4000000));
     baudBox->setCurrentIndex(14);
+#else
+    QList<int> baudRateList = port.baudList();
+    Q_FOREACH(int val, baudRateList)
+    {
+        baudBox->addItem(QString::number(val));
+    }
+
+    baudBox->setCurrentIndex(9);
+#endif
+
 
 
     dataBitBox = new QComboBox;
+#ifdef Q_OS_UNIX
     dataBitBox->addItem("5",QVariant::fromValue(DB5));
     dataBitBox->addItem("6",QVariant::fromValue(DB6));
     dataBitBox->addItem("7",QVariant::fromValue(DB7));
     dataBitBox->addItem("8",QVariant::fromValue(DB8));
+#else
+    dataBitBox->addItem("5");
+    dataBitBox->addItem("6");
+    dataBitBox->addItem("7");
+    dataBitBox->addItem("8");
+#endif
     dataBitBox->setCurrentIndex(3);
 
     parityBox = new QComboBox;
-    parityBox->addItem("none",QVariant::fromValue(DB5));
-    parityBox->addItem("Even",QVariant::fromValue(DB6));
-    parityBox->addItem("Odd",QVariant::fromValue(DB7));
+    parityBox->addItem("none",QVariant::fromValue(NONE));
+    parityBox->addItem("Even",QVariant::fromValue(EVEN));
+    parityBox->addItem("Odd",QVariant::fromValue(ODD));
 
     readPortCheck = new QCheckBox("Read");
     writePortCheck = new QCheckBox("Write");
@@ -219,7 +244,12 @@ SerialApp::~SerialApp()
 void SerialApp::open()
 {
 
+#ifdef Q_OS_UNIX
     port.setDeviceName("/dev/" + portBox->currentText());
+#else
+    port.setDeviceName(portBox->currentText());
+#endif
+
     if(readPortCheck->isChecked() && writePortCheck->isChecked())
     {
         this->sendButton->setEnabled(true);
@@ -240,11 +270,15 @@ void SerialApp::open()
         return;
     }
 
+#ifdef Q_OS_UNIX
     if(!QFile(port.getDeviceName()).exists())
     {
         QMessageBox::warning(this,"Error opening port",port.getDeviceName() +" does not exists.");
         return;
     }
+#else
+    //TODO for windows
+#endif
 
     if(!port.openDevice())
     {
@@ -253,20 +287,32 @@ void SerialApp::open()
     }
 
     QVariant temp;
+
+#ifdef Q_OS_UNIX
     temp = baudBox->itemData(baudBox->currentIndex());
     port.setBaudRate(temp.value<BaudRateType>());
 
     temp = dataBitBox->itemData(dataBitBox->currentIndex());
     port.setDataBits(temp.value<DataBitsType>());
 
+
+    if(stopBitCheck->isChecked())
+        port.setStopBits(SB2);
+#else
+
+    port.setBaudRate(baudBox->currentText().toInt());
+    port.setDataBits(dataBitBox->currentText().toInt());
+    if(stopBitCheck->isChecked())
+        port.setStopBits(2);
+    else
+        port.setStopBits(1);
+#endif
     if(parityBox->currentIndex())
     {
         temp = parityBox->itemData(parityBox->currentIndex());
         port.setParity(temp.value<ParityType>());
     }
 
-    if(stopBitCheck->isChecked())
-        port.setStopBits(SB2);
     if(!port.applySetting())
     {
         QMessageBox::warning(this,"Error opening port","Unable to apply port setting.");

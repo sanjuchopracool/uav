@@ -63,6 +63,7 @@ enum StopBitsType
 
 enum ParityType
 {
+    NONE,
     ODD,
     EVEN
 };

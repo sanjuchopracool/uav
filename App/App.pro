@@ -13,7 +13,6 @@ TARGET = App
 TEMPLATE = app
 DESTDIR = bin
 OBJECTS_DIR = obj
-UI_DIR = ui
 MOC_DIR = moc
 
 SOURCES += main.cpp \
@@ -21,17 +20,23 @@ SOURCES += main.cpp \
     colorwidget.cpp \
     colorlabel.cpp \
     graphwidget.cpp \
-    SerialApp.cpp \
-    serialport.cpp
+    SerialApp.cpp
 
 HEADERS  += \
     Plotter.h \
     colorwidget.h \
     colorlabel.h \
     graphwidget.h \
-    SerialApp.h \
-    serialport.h
+    SerialApp.h
 
+ win32 {
+     SOURCES +=  SerialPortWin.cpp
+     HEADERS += SerialPortWin.h
+ }
+ unix {
+     SOURCES +=  serialport.cpp
+     HEADERS +=    serialport.h
+ }
 FORMS += \
     colorwidget.ui
 

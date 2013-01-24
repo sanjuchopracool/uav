@@ -241,7 +241,7 @@ void Plotter::changePlotSettingSlot()
     QVector<QColor> vect(12);
     for(int i=0; i <12 ;i++)
         vect[i] = colorMap.value(i);
-    ColorWidget cWidget;
+    ColorWidget cWidget(this);
     cWidget.move(this->rect().center().x() -200 , this->rect().center().y() -100);
     cWidget.getColor(backgroundColor,textColor,gridColor,&vect);
     connect(&cWidget,SIGNAL(setColor(QColor,QColor,QColor,QVector<QColor>)),

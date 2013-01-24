@@ -13,9 +13,14 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPlainTextEdit>
-#include "serialport.h"
 #include <QSplitter>
 #include <QToolButton>
+
+#ifdef Q_OS_UNIX
+#include "serialport.h"
+#else
+#include  "SerialPortWin.h"
+#endif
 
 class SerialApp : public QWidget
 {
