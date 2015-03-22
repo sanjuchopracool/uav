@@ -355,7 +355,7 @@ void SerialApp::close()
 void SerialApp::send()
 {
     char *data;
-    QByteArray dataArray = this->sendEdit->text().toAscii();
+    QByteArray dataArray = this->sendEdit->text().toLatin1();
     data = dataArray.data();
     port.writeToPort(data,dataArray.size());
     this->sendEdit->clear();
