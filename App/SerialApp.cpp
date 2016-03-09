@@ -16,7 +16,7 @@ SerialPort SerialApp::port(0);
 void SerialApp::refreshDevices()
 {
     QStringList deviceList;
-#ifdef Q_OS__UNIX
+#ifdef Q_OS_UNIX
     QDir dir("/dev/");
     QStringList filters;
     filters  << "ttyUSB*" << "ttyS*";
